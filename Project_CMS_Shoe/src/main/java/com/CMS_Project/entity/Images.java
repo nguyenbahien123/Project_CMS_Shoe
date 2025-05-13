@@ -17,7 +17,7 @@ public class Images extends AuditModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int imageId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "variant_id", nullable = false)
     private ShoeVariants variant;
 

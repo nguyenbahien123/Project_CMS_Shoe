@@ -20,15 +20,7 @@ public class OrderDetailsService {
     OrderDetailsMapper orderDetailsMapper;
 
     public List<OrderDetailsResponse> getAll() {
-        return orderDetailRepository.findAll().stream()
-                .map(orderDetail -> OrderDetailsResponse.builder()
-                        .orderDetailId(orderDetail.getOrderDetailId())
-                        .orderId(orderDetail.getOrder().getOrderId())
-                        .shoeId(orderDetail.getShoes().getShoeId())
-                        .quantity(orderDetail.getQuantity())
-                        .priceShoe(orderDetail.getPriceShoe())
-                        .build())
-                .toList();
+        return orderDetailRepository.findAll().stream().map(orderDetailsMapper::toOrderDetailsResponse).toList();
     }
 
 }

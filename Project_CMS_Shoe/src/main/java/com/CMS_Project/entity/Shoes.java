@@ -19,7 +19,7 @@ public class Shoes extends AuditModel{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int shoeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "brand_id", nullable = false)
     private Brands brands;
 

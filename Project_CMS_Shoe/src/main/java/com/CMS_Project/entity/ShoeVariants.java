@@ -20,15 +20,15 @@ public class ShoeVariants extends AuditModel{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int variantId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "shoe_id", nullable = false)
     private Shoes shoe;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "color_id", nullable = false)
     private Colors color;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "size_id", nullable = false)
     private Sizes size;
 

@@ -11,6 +11,5 @@ import org.mapstruct.MappingTarget;
 
 @Mapper
 public interface OrderMapper {
-//    @Mapping(target = "user", ignore = true)
     OrderResponse toOrderResponse(Orders orders);
 }

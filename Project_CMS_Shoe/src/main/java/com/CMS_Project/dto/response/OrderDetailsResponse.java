@@ -1,5 +1,10 @@
 package com.CMS_Project.dto.response;
 
+import com.CMS_Project.entity.Images;
+import com.CMS_Project.entity.Orders;
+import com.CMS_Project.entity.ShoeVariants;
+import com.CMS_Project.entity.Shoes;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,8 +17,10 @@ import java.math.BigDecimal;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDetailsResponse {
      int orderDetailId;
-     int orderId;
-     int shoeId;
+     Orders order;
+     Shoes shoes;
+     ShoeVariants shoeVariants;
+     Images images;
      int quantity;
      BigDecimal priceShoe;
 }
