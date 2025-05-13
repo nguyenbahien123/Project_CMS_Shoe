@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -12,13 +14,13 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Sizes extends AuditModel{
-
+public class Roles extends AuditModel{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int sizeId;
-
-    @Column(nullable = false, unique = true)
     private String name;
 
+    @Column( unique = true, nullable = false, length = 50)
+    private String description;
+
+    @ManyToMany
+    Set<Permissions> permissions;
 }

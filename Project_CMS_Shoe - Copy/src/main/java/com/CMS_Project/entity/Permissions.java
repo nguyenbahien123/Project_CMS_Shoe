@@ -1,7 +1,8 @@
 package com.CMS_Project.entity;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,13 +13,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Sizes extends AuditModel{
-
+public class Permissions extends AuditModel{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int sizeId;
+    String name;
 
-    @Column(nullable = false, unique = true)
-    private String name;
-
+    String description;
 }

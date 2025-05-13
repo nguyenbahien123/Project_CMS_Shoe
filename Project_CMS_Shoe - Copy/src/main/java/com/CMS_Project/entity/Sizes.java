@@ -18,7 +18,7 @@ public class Sizes extends AuditModel{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sizeId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
 }

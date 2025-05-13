@@ -1,6 +1,5 @@
 package com.CMS_Project.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,13 +11,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Sizes extends AuditModel{
-
+public class Brands extends AuditModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int sizeId;
+    @Column(name = "brand_id")
+    private int brandId;
 
-    @Column(nullable = false, unique = true)
-    private String name;
-
+    @Column(name = "brand_name", nullable = false, unique = true, length = 100)
+    private String brandName;
 }

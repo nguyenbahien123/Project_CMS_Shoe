@@ -17,6 +17,6 @@ public class Colors extends AuditModel{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int colorId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 }

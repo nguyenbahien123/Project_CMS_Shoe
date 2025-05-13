@@ -12,13 +12,15 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Sizes extends AuditModel{
-
+public class Images extends AuditModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int sizeId;
+    private int imageId;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+    @ManyToOne()
+    @JoinColumn(name = "variant_id", nullable = false)
+    private ShoeVariants variant;
 
+    @Column(nullable = false)
+    private String url;
 }

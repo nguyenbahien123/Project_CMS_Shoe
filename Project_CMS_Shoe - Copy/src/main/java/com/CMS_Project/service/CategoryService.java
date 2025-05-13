@@ -45,9 +45,9 @@ public class CategoryService {
         return categoryMapper.toCategoryResponse(category);
     }
 
-    public CategoryResponse update(Integer categoryId, CategoryRequest categoryRequest) {
+    public CategoryResponse update(Integer categoryId, CategoryRequest brandRequest) {
         Categories category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
-        categoryMapper.updateCategory(category, categoryRequest);
+        categoryMapper.updateCategory(category, brandRequest);
         Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         category.setUpdatedAt(LocalDateTime.now());
         category.setUpdatedBy(user.getEmail());

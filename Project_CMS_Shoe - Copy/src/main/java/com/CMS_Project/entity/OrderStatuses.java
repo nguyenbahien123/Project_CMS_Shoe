@@ -12,13 +12,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Sizes extends AuditModel{
-
+public class OrderStatuses extends AuditModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int sizeId;
+    @Column(name = "status_id")
+    private int statusId;
 
-    @Column(nullable = false, unique = true)
-    private String name;
-
+    @Column(name = "status_name", unique = true, nullable = false, length = 50)
+    private String statusName;
 }

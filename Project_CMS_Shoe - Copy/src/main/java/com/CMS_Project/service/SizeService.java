@@ -45,9 +45,9 @@ public class SizeService {
 
     public SizeResponse update(Integer sizeId, SizeRequest sizeRequest) {
         Sizes sizes = sizeRepository.findById(sizeId).orElseThrow(() -> new AppException(ErrorCode.SIZE_NOT_EXISTED));
-        sizeMapper.updateSize(sizes, sizeRequest);
         sizes.setUpdatedAt(LocalDateTime.now());
         Users users = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        sizes.setUpdatedAt(LocalDateTime.now());
         sizes.setUpdatedBy(users.getEmail());
         sizeRepository.save(sizes);
         return sizeMapper.toSizeResponse(sizeRepository.save(sizes));
