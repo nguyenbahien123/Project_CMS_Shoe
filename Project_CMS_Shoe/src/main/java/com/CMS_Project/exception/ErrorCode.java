@@ -23,7 +23,9 @@ public enum ErrorCode {
     SIZE_NOT_EXISTED(1012, "Size not existed ", HttpStatus.NOT_FOUND),
     PERMISSION_NOT_EXISTED(1012, "Permission not existed ", HttpStatus.NOT_FOUND),
     ORDER_STATUS_NOT_EXISTED(1012, "Order status not existed ", HttpStatus.NOT_FOUND),
-    ROLE_NOT_EXISTED(1012, "Role status not existed ", HttpStatus.NOT_FOUND),
+    ROLE_NOT_EXISTED(1012, "Role not existed ", HttpStatus.NOT_FOUND),
+    SHOE_NOT_EXISTED(1013, "Shoe not existed ", HttpStatus.NOT_FOUND),
+    SHOE_VARIANT_NOT_EXISTED(1013, "Shoe variant not existed ", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

@@ -54,7 +54,7 @@ public class ShoeService {
     }
 
     public ShoeResponse update(Integer shoeId, ShoeRequest shoeRequest) {
-        Shoes shoes = shoeRepository.findById(shoeId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Shoes shoes = shoeRepository.findById(shoeId).orElseThrow(() -> new AppException(ErrorCode.SHOE_NOT_EXISTED));
         shoeMapper.updateShoe(shoes, shoeRequest);
         Users users = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         shoes.setUpdatedBy(users.getEmail());
