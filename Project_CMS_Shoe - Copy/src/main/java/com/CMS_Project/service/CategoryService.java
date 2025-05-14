@@ -12,13 +12,14 @@ import com.CMS_Project.exception.ErrorCode;
 
 
 import com.CMS_Project.mapper.CategoryMapper;
-import com.CMS_Project.mapper.ColorMapper;
 import com.CMS_Project.repository.CategoryRepository;
 import com.CMS_Project.repository.ColorRepository;
 import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,9 +35,11 @@ public class CategoryService {
     CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse create(CategoryRequest categoryRequest) {
         Categories category = categoryMapper.toCategory(categoryRequest);
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         category.setCreatedAt(LocalDateTime.now());
         category.setUpdatedAt(LocalDateTime.now());
         category.setCreatedBy(user.getEmail());
@@ -45,20 +48,24 @@ public class CategoryService {
         return categoryMapper.toCategoryResponse(category);
     }
 
-    public CategoryResponse update(Integer categoryId, CategoryRequest brandRequest) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public CategoryResponse update(Integer categoryId, CategoryRequest categoryRequest) {
         Categories category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
-        categoryMapper.updateCategory(category, brandRequest);
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        categoryMapper.updateCategory(category, categoryRequest);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         category.setUpdatedAt(LocalDateTime.now());
         category.setUpdatedBy(user.getEmail());
         categoryRepository.save(category);
         return categoryMapper.toCategoryResponse(category);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<CategoryResponse> getAll() {
         return categoryRepository.findAll().stream().map(categoryMapper::toCategoryResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer categoryId) {
         categoryRepository.deleteById(categoryId);
     }

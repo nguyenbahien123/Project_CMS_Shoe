@@ -7,6 +7,7 @@ import com.CMS_Project.repository.OrderDetailRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class OrderDetailsService {
     OrderDetailRepository orderDetailRepository;
     OrderDetailsMapper orderDetailsMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<OrderDetailsResponse> getAll() {
         return orderDetailRepository.findAll().stream().map(orderDetailsMapper::toOrderDetailsResponse).toList();
     }

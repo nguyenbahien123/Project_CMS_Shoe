@@ -35,6 +35,6 @@ public class ShoeVariants extends AuditModel{
     @Column(nullable = false)
     private Integer quantity;
 
-    @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL)
-    private List<Images> images;
+//    @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL)
+//    private List<Images> images;
 }

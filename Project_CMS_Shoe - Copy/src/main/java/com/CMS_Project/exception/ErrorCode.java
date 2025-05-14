@@ -10,8 +10,8 @@ public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
     USER_EXISTED(1002, "User existed", HttpStatus.BAD_REQUEST),
-    USERNAME_INVALID(1003, "Username must be at least {min} characters", HttpStatus.BAD_REQUEST),
-    INVALID_PASSWORD(1004, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    USERNAME_INVALID(1003, "Username must be at least 3 characters", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD(1004, "Password must be at least 6 characters", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "User not existed", HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
@@ -23,7 +23,11 @@ public enum ErrorCode {
     SIZE_NOT_EXISTED(1012, "Size not existed ", HttpStatus.NOT_FOUND),
     PERMISSION_NOT_EXISTED(1012, "Permission not existed ", HttpStatus.NOT_FOUND),
     ORDER_STATUS_NOT_EXISTED(1012, "Order status not existed ", HttpStatus.NOT_FOUND),
-    ROLE_NOT_EXISTED(1012, "Role status not existed ", HttpStatus.NOT_FOUND),
+    ROLE_NOT_EXISTED(1012, "Role not existed ", HttpStatus.NOT_FOUND),
+    SHOE_NOT_EXISTED(1013, "Shoe not existed ", HttpStatus.NOT_FOUND),
+    SHOE_VARIANT_NOT_EXISTED(1014, "Shoe variant not existed ", HttpStatus.NOT_FOUND),
+    IMAGE_NOT_EXISTED(1015, "Image not existed ", HttpStatus.NOT_FOUND),
+    INVALID_TOKEN(1016, "Invalid token ", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

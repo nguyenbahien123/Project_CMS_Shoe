@@ -18,6 +18,8 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,17 +35,20 @@ public class PermissionService {
     PermissionMapper permissionMapper;
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     public PermissionResponse create(PermissionRequest permissionRequest) {
         Permissions permissions = permissionMapper.toPermission(permissionRequest);
         permissions.setCreatedAt(LocalDateTime.now());
         permissions.setUpdatedAt(LocalDateTime.now());
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         permissions.setCreatedBy(user.getEmail());
         permissions.setUpdatedBy(user.getEmail());
         permissionRepository.save(permissions);
         return permissionMapper.toPermissionResponse(permissions);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public PermissionResponse update(String permissionId, PermissionRequest permissionRequest) {
         Permissions permissions = permissionRepository.findById(permissionId).orElseThrow(()-> new AppException(ErrorCode.PERMISSION_NOT_EXISTED));
         permissionMapper.updatePermission(permissions,permissionRequest);
@@ -55,10 +60,12 @@ public class PermissionService {
         return permissionMapper.toPermissionResponse(permissions);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<PermissionResponse> getAll() {
         return permissionRepository.findAll().stream().map(permissionMapper::toPermissionResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(String permissionId) {
         permissionRepository.deleteById(permissionId);
     }

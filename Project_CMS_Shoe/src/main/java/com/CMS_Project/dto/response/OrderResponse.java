@@ -14,10 +14,10 @@ import java.math.BigDecimal;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderResponse {
      int orderId;
-     Users user;
+     UserResponse user;
      String receivedName;
      String receivedPhone;
      String receivedAddress;
-     OrderStatuses status;
+     OrderStatusResponse status;
      BigDecimal totalPrice;
 }

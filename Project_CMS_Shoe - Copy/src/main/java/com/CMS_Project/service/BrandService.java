@@ -1,7 +1,6 @@
 package com.CMS_Project.service;
 
 import com.CMS_Project.dto.request.BrandRequest;
-import com.CMS_Project.dto.response.BlogResponse;
 import com.CMS_Project.dto.response.BrandResponse;
 import com.CMS_Project.entity.Brands;
 import com.CMS_Project.entity.Users;
@@ -13,6 +12,8 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,9 +28,11 @@ public class BrandService {
     UserRepository userRepository;
     BrandMapper brandMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public BrandResponse create(BrandRequest brandRequest) {
         Brands brand = brandMapper.toBrand(brandRequest);
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         brand.setCreatedAt(LocalDateTime.now());
         brand.setUpdatedAt(LocalDateTime.now());
         brand.setCreatedBy(user.getEmail());
@@ -38,20 +41,24 @@ public class BrandService {
         return brandMapper.toBrandResponse(brand);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public BrandResponse update(Integer brandId, BrandRequest brandRequest) {
         Brands brand = brandsRepository.findById(brandId).orElseThrow(()-> new AppException(ErrorCode.BRAND_NOT_EXISTED));
         brandMapper.updateBrand(brand, brandRequest);
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         brand.setUpdatedAt(LocalDateTime.now());
         brand.setUpdatedBy(user.getEmail());
         brandsRepository.save(brand);
         return brandMapper.toBrandResponse(brand);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<BrandResponse> getAll() {
         return brandsRepository.findAll().stream().map(brandMapper::toBrandResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer brandId) {
         brandsRepository.deleteById(brandId);
     }
