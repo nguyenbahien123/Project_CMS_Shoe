@@ -66,7 +66,6 @@ public class UserService {
         return userMapper.toUserResponse(users);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(int userId) {
         userRepository.deleteById(userId);
     }
@@ -74,14 +73,14 @@ public class UserService {
     public UserPageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"id");
         if(StringUtils.hasLength(sort)){
-            Pattern pattern = Pattern.compile("(\\w+?):(:)(.*)");
+            Pattern pattern = Pattern.compile("^(\\w+):(asc|desc)$", Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(sort);
             if(matcher.find()){
                 String columnName = matcher.group(1);
-                if(matcher.group(3).equalsIgnoreCase("asc")){
-                    order = Sort.Order.asc(columnName);
+                if(matcher.group(2).equalsIgnoreCase("asc")){
+                    order = new Sort.Order(Sort.Direction.ASC,columnName);
                 }else{
-                    order = Sort.Order.desc(columnName);
+                    order = new Sort.Order(Sort.Direction.DESC,columnName);
                 }
             }
         }
