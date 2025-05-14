@@ -16,6 +16,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,7 +36,8 @@ public class ImageService {
         Images image = imageMapper.toImages(imageRequest);
         image.setCreatedAt(LocalDateTime.now());
         image.setUpdatedAt(LocalDateTime.now());
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         image.setCreatedBy(user.getEmail());
         image.setUpdatedBy(user.getEmail());
         ShoeVariants shoeVariants = shoeVariantRepository.findById(imageRequest.getVariant()).orElseThrow(() -> new AppException(ErrorCode.SHOE_VARIANT_NOT_EXISTED));
@@ -47,7 +49,8 @@ public class ImageService {
     public ImageResponse update(Integer imageId, ImageRequest imageRequest) {
         Images images = imageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_EXISTED));
         imageMapper.updateShoe(images, imageRequest);
-        Users users = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         images.setUpdatedAt(LocalDateTime.now());
         images.setUpdatedBy(users.getEmail());
         ShoeVariants shoeVariants = shoeVariantRepository.findById(imageRequest.getVariant()).orElseThrow(() -> new AppException(ErrorCode.SHOE_VARIANT_NOT_EXISTED));

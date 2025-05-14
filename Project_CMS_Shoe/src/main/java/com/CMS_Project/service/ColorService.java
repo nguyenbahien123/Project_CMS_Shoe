@@ -17,6 +17,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,7 +36,8 @@ public class ColorService {
         Colors colors = colorMapper.toColor(colorRequest);
         colors.setCreatedAt(LocalDateTime.now());
         colors.setUpdatedAt(LocalDateTime.now());
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         colors.setCreatedBy(user.getEmail());
         colors.setUpdatedBy(user.getEmail());
         colorRepository.save(colors);
@@ -45,7 +47,8 @@ public class ColorService {
     public ColorResponse update(Integer colorId, ColorRequest colorRequest) {
         Colors color = colorRepository.findById(colorId).orElseThrow(()-> new AppException(ErrorCode.COLOR_NOT_EXISTED));
         colorMapper.updateColor(color, colorRequest);
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         color.setUpdatedAt(LocalDateTime.now());
         color.setUpdatedBy(user.getEmail());
         colorRepository.save(color);

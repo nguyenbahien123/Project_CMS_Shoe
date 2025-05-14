@@ -18,6 +18,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,7 +37,8 @@ public class SizeService {
         Sizes size = sizeMapper.toSize(sizeRequest);
         size.setCreatedAt(LocalDateTime.now());
         size.setUpdatedAt(LocalDateTime.now());
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         size.setCreatedBy(user.getEmail());
         size.setUpdatedBy(user.getEmail());
         sizeRepository.save(size);
@@ -47,7 +49,8 @@ public class SizeService {
         Sizes sizes = sizeRepository.findById(sizeId).orElseThrow(() -> new AppException(ErrorCode.SIZE_NOT_EXISTED));
         sizeMapper.updateSize(sizes, sizeRequest);
         sizes.setUpdatedAt(LocalDateTime.now());
-        Users users = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         sizes.setUpdatedBy(users.getEmail());
         sizeRepository.save(sizes);
         return sizeMapper.toSizeResponse(sizeRepository.save(sizes));

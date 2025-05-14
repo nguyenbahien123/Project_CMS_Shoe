@@ -20,6 +20,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -43,7 +44,8 @@ public class RoleService {
         role.setUpdatedAt(LocalDateTime.now());
         List<Permissions> permissions = permissionRepository.findAllById(roleRequest.getPermissions());
         role.setPermissions(new HashSet<>(permissions));
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         role.setCreatedBy(user.getEmail());
         role.setUpdatedBy(user.getEmail());
         roleRepository.save(role);

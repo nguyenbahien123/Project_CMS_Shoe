@@ -22,6 +22,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,7 +43,8 @@ public class ShoeService {
         Shoes shoe = shoeMapper.toShoes(shoeRequest);
         shoe.setCreatedAt(LocalDateTime.now());
         shoe.setUpdatedAt(LocalDateTime.now());
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         shoe.setCreatedBy(user.getEmail());
         shoe.setUpdatedBy(user.getEmail());
         Brands brands = brandsRepository.findByBrandName(shoeRequest.getBrands()).orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_EXISTED));
@@ -56,7 +58,8 @@ public class ShoeService {
     public ShoeResponse update(Integer shoeId, ShoeRequest shoeRequest) {
         Shoes shoes = shoeRepository.findById(shoeId).orElseThrow(() -> new AppException(ErrorCode.SHOE_NOT_EXISTED));
         shoeMapper.updateShoe(shoes, shoeRequest);
-        Users users = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         shoes.setUpdatedBy(users.getEmail());
         shoes.setUpdatedAt(LocalDateTime.now());
         Brands brands = brandsRepository.findByBrandName(shoeRequest.getBrands()).orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_EXISTED));

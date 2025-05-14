@@ -12,6 +12,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,7 +31,8 @@ public class BlogService {
         Blogs blogs = blogMapper.toBlog(blogRequest);
         blogs.setCreatedAt(LocalDateTime.now());
         blogs.setUpdatedAt(LocalDateTime.now());
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         blogs.setUser(user);
         blogs.setCreatedBy(user.getEmail());
         blogs.setUpdatedBy(user.getEmail());
@@ -47,7 +49,8 @@ public class BlogService {
     public BlogResponse update(int id,BlogRequest blogRequest) {
         Blogs blog = blogRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
         blogMapper.updateBlog(blog, blogRequest);
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         blog.setUser(user);
         blog.setUpdatedAt(LocalDateTime.now());
         blog.setUpdatedBy(user.getEmail());

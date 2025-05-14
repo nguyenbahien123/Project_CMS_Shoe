@@ -18,6 +18,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,7 +38,8 @@ public class PermissionService {
         Permissions permissions = permissionMapper.toPermission(permissionRequest);
         permissions.setCreatedAt(LocalDateTime.now());
         permissions.setUpdatedAt(LocalDateTime.now());
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         permissions.setCreatedBy(user.getEmail());
         permissions.setUpdatedBy(user.getEmail());
         permissionRepository.save(permissions);

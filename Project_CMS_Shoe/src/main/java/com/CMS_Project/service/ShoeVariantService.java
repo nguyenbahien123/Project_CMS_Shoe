@@ -15,6 +15,7 @@ import com.CMS_Project.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,7 +37,8 @@ public class ShoeVariantService {
         ShoeVariants shoeVariants = shoeVariantMapper.toShoeVariant(shoeVariantRequest);
         shoeVariants.setCreatedAt(LocalDateTime.now());
         shoeVariants.setUpdatedAt(LocalDateTime.now());
-        Users user = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         shoeVariants.setCreatedBy(user.getEmail());
         shoeVariants.setUpdatedBy(user.getEmail());
         Colors colors = colorRepository.findByName(shoeVariantRequest.getColor()).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
@@ -52,7 +54,8 @@ public class ShoeVariantService {
     public ShoeVariantResponse update(Integer variantId, ShoeVariantRequest shoeVariantRequest) {
         ShoeVariants shoeVariants = shoeVariantRepository.findById(variantId).orElseThrow(()-> new AppException(ErrorCode.SHOE_VARIANT_NOT_EXISTED));
         shoeVariantMapper.updateShoe(shoeVariants,shoeVariantRequest);
-        Users users = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         shoeVariants.setUpdatedBy(users.getEmail());
         shoeVariants.setUpdatedAt(LocalDateTime.now());
         Colors colors = colorRepository.findByName(shoeVariantRequest.getColor()).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
