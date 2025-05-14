@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,9 +28,11 @@ public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     RoleRepository roleRepository;
+    PasswordEncoder passwordEncoder;
 
     public UserResponse createUser( UserCreationRequest request) {
         Users user = userMapper.toUser(request);
+        user.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         Roles role = roleRepository.findById("USER").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
@@ -45,6 +48,7 @@ public class UserService {
     public UserResponse updateUser(int userId, UserUpdateRequest request) {
         Users users = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userMapper.updateUser(users, request);
+        users.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
         Roles role = roleRepository.findById(request.getRoles()).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
         users.setRoles(role);
         users.setUpdatedAt(LocalDateTime.now());
