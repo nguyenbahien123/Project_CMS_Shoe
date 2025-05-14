@@ -15,6 +15,7 @@ import com.CMS_Project.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class ShoeVariantService {
     ShoeRepository shoeRepository;
     SizeRepository sizeRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public ShoeVariantResponse create(ShoeVariantRequest shoeVariantRequest) {
         ShoeVariants shoeVariants = shoeVariantMapper.toShoeVariant(shoeVariantRequest);
         shoeVariants.setCreatedAt(LocalDateTime.now());
@@ -51,6 +53,7 @@ public class ShoeVariantService {
         return shoeVariantMapper.toShoeVariantResponse(shoeVariants);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public ShoeVariantResponse update(Integer variantId, ShoeVariantRequest shoeVariantRequest) {
         ShoeVariants shoeVariants = shoeVariantRepository.findById(variantId).orElseThrow(()-> new AppException(ErrorCode.SHOE_VARIANT_NOT_EXISTED));
         shoeVariantMapper.updateShoe(shoeVariants,shoeVariantRequest);
@@ -68,10 +71,12 @@ public class ShoeVariantService {
         return shoeVariantMapper.toShoeVariantResponse(shoeVariants);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ShoeVariantResponse> getAll() {
         return shoeVariantRepository.findAll().stream().map(shoeVariantMapper::toShoeVariantResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer variantId) {
         shoeVariantRepository.deleteById(variantId);
     }

@@ -12,13 +12,13 @@ import com.CMS_Project.exception.ErrorCode;
 
 
 import com.CMS_Project.mapper.CategoryMapper;
-import com.CMS_Project.mapper.ColorMapper;
 import com.CMS_Project.repository.CategoryRepository;
 import com.CMS_Project.repository.ColorRepository;
 import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +35,7 @@ public class CategoryService {
     CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse create(CategoryRequest categoryRequest) {
         Categories category = categoryMapper.toCategory(categoryRequest);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -47,6 +48,7 @@ public class CategoryService {
         return categoryMapper.toCategoryResponse(category);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse update(Integer categoryId, CategoryRequest categoryRequest) {
         Categories category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
         categoryMapper.updateCategory(category, categoryRequest);
@@ -58,10 +60,12 @@ public class CategoryService {
         return categoryMapper.toCategoryResponse(category);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<CategoryResponse> getAll() {
         return categoryRepository.findAll().stream().map(categoryMapper::toCategoryResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer categoryId) {
         categoryRepository.deleteById(categoryId);
     }

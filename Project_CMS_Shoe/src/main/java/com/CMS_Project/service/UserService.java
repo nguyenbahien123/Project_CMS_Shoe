@@ -10,10 +10,10 @@ import com.CMS_Project.exception.ErrorCode;
 import com.CMS_Project.mapper.UserMapper;
 import com.CMS_Project.repository.RoleRepository;
 import com.CMS_Project.repository.UserRepository;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,9 +41,11 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAll() {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
+
 
     public UserResponse updateUser(int userId, UserUpdateRequest request) {
         Users users = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -56,6 +58,7 @@ public class UserService {
         return userMapper.toUserResponse(users);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(int userId) {
         userRepository.deleteById(userId);
     }

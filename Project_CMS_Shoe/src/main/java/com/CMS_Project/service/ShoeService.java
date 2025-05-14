@@ -22,6 +22,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,7 @@ public class ShoeService {
     BrandsRepository brandsRepository;
     CategoryRepository categoryRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public ShoeResponse create(ShoeRequest shoeRequest) {
         Shoes shoe = shoeMapper.toShoes(shoeRequest);
         shoe.setCreatedAt(LocalDateTime.now());
@@ -55,6 +57,7 @@ public class ShoeService {
         return shoeMapper.toShoeResponse(shoe);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public ShoeResponse update(Integer shoeId, ShoeRequest shoeRequest) {
         Shoes shoes = shoeRepository.findById(shoeId).orElseThrow(() -> new AppException(ErrorCode.SHOE_NOT_EXISTED));
         shoeMapper.updateShoe(shoes, shoeRequest);
@@ -70,10 +73,12 @@ public class ShoeService {
         return shoeMapper.toShoeResponse(shoes);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ShoeResponse> getAll() {
         return shoeRepository.findAll().stream().map(shoeMapper::toShoeResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer shoeId) {
         shoeRepository.deleteById(shoeId);
     }

@@ -7,6 +7,7 @@ import com.CMS_Project.repository.CommentRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class CommentService {
     CommentRepository commentRepository;
     CommentMapper commentMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<CommentResponse> getAll() {
         return commentRepository.findAll().stream().map(commentMapper::toCommentResponse).toList();
     }

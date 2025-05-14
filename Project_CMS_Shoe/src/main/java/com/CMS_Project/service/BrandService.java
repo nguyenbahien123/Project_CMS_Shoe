@@ -1,7 +1,6 @@
 package com.CMS_Project.service;
 
 import com.CMS_Project.dto.request.BrandRequest;
-import com.CMS_Project.dto.response.BlogResponse;
 import com.CMS_Project.dto.response.BrandResponse;
 import com.CMS_Project.entity.Brands;
 import com.CMS_Project.entity.Users;
@@ -13,6 +12,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +28,7 @@ public class BrandService {
     UserRepository userRepository;
     BrandMapper brandMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public BrandResponse create(BrandRequest brandRequest) {
         Brands brand = brandMapper.toBrand(brandRequest);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -40,6 +41,7 @@ public class BrandService {
         return brandMapper.toBrandResponse(brand);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public BrandResponse update(Integer brandId, BrandRequest brandRequest) {
         Brands brand = brandsRepository.findById(brandId).orElseThrow(()-> new AppException(ErrorCode.BRAND_NOT_EXISTED));
         brandMapper.updateBrand(brand, brandRequest);
@@ -51,10 +53,12 @@ public class BrandService {
         return brandMapper.toBrandResponse(brand);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<BrandResponse> getAll() {
         return brandsRepository.findAll().stream().map(brandMapper::toBrandResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer brandId) {
         brandsRepository.deleteById(brandId);
     }

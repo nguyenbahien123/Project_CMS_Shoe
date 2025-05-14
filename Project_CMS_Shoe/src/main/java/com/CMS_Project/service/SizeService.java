@@ -18,6 +18,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class SizeService {
     UserRepository userRepository;
     SizeMapper sizeMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public SizeResponse create(SizeRequest sizeRequest) {
         Sizes size = sizeMapper.toSize(sizeRequest);
         size.setCreatedAt(LocalDateTime.now());
@@ -45,6 +47,7 @@ public class SizeService {
         return sizeMapper.toSizeResponse(size);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public SizeResponse update(Integer sizeId, SizeRequest sizeRequest) {
         Sizes sizes = sizeRepository.findById(sizeId).orElseThrow(() -> new AppException(ErrorCode.SIZE_NOT_EXISTED));
         sizeMapper.updateSize(sizes, sizeRequest);
@@ -56,10 +59,12 @@ public class SizeService {
         return sizeMapper.toSizeResponse(sizeRepository.save(sizes));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<SizeResponse> getAll() {
         return sizeRepository.findAll().stream().map(sizeMapper::toSizeResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer sizeId) {
         sizeRepository.deleteById(sizeId);
     }

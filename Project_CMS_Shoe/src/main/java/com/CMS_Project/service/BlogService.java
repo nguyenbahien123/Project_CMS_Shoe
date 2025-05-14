@@ -12,6 +12,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class BlogService {
     BlogMapper blogMapper;
     UserRepository userRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public BlogResponse create(BlogRequest blogRequest) {
         Blogs blogs = blogMapper.toBlog(blogRequest);
         blogs.setCreatedAt(LocalDateTime.now());
@@ -40,12 +42,12 @@ public class BlogService {
         return blogMapper.toBlogResponse(blogs);
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     public List<BlogResponse> getAll() {
         return blogRepository.findAll().stream().map(blogMapper::toBlogResponse).toList();
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     public BlogResponse update(int id,BlogRequest blogRequest) {
         Blogs blog = blogRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
         blogMapper.updateBlog(blog, blogRequest);
@@ -58,6 +60,7 @@ public class BlogService {
         return blogMapper.toBlogResponse(blog);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer blogId) {
         blogRepository.deleteById(blogId);
     }

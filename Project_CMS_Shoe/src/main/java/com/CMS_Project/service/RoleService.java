@@ -20,6 +20,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ public class RoleService {
     RoleMapper roleMapper;
     PermissionRepository permissionRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse create(RoleRequest roleRequest) {
         Roles role = roleMapper.toRole(roleRequest);
         role.setCreatedAt(LocalDateTime.now());
@@ -53,10 +55,12 @@ public class RoleService {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getAll() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(String roleId) {
         roleRepository.deleteById(roleId);
     }

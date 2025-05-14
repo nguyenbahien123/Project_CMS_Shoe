@@ -18,6 +18,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ public class PermissionService {
     PermissionMapper permissionMapper;
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     public PermissionResponse create(PermissionRequest permissionRequest) {
         Permissions permissions = permissionMapper.toPermission(permissionRequest);
         permissions.setCreatedAt(LocalDateTime.now());
@@ -46,6 +48,7 @@ public class PermissionService {
         return permissionMapper.toPermissionResponse(permissions);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public PermissionResponse update(String permissionId, PermissionRequest permissionRequest) {
         Permissions permissions = permissionRepository.findById(permissionId).orElseThrow(()-> new AppException(ErrorCode.PERMISSION_NOT_EXISTED));
         permissionMapper.updatePermission(permissions,permissionRequest);
@@ -57,10 +60,12 @@ public class PermissionService {
         return permissionMapper.toPermissionResponse(permissions);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<PermissionResponse> getAll() {
         return permissionRepository.findAll().stream().map(permissionMapper::toPermissionResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(String permissionId) {
         permissionRepository.deleteById(permissionId);
     }

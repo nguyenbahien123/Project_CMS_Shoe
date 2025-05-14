@@ -16,6 +16,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class OrderService {
     UserRepository userRepository;
     OrderMapper orderMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<OrderResponse> getAll() {
         return orderRepository.findAll().stream().map(orderMapper::toOrderResponse).toList();
     }

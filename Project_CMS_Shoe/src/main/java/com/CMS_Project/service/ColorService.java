@@ -17,6 +17,7 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,7 @@ public class ColorService {
     UserRepository userRepository;
     ColorMapper colorMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public ColorResponse create(ColorRequest colorRequest) {
         Colors colors = colorMapper.toColor(colorRequest);
         colors.setCreatedAt(LocalDateTime.now());
@@ -44,6 +46,7 @@ public class ColorService {
         return colorMapper.toColorResponse(colors);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public ColorResponse update(Integer colorId, ColorRequest colorRequest) {
         Colors color = colorRepository.findById(colorId).orElseThrow(()-> new AppException(ErrorCode.COLOR_NOT_EXISTED));
         colorMapper.updateColor(color, colorRequest);
@@ -55,11 +58,13 @@ public class ColorService {
         return colorMapper.toColorResponse(color);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ColorResponse> getAll() {
         return colorRepository.findAll().stream().map(colorMapper::toColorResponse).toList();
     }
 
-    public void delete(Integer sizeId) {
-        colorRepository.deleteById(sizeId);
+    @PreAuthorize("hasRole('ADMIN')")
+    public void delete(Integer colorId) {
+        colorRepository.deleteById(colorId);
     }
 }
