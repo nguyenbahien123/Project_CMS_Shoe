@@ -3,6 +3,7 @@ package com.CMS_Project.controller;
 import com.CMS_Project.dto.request.UserCreationRequest;
 import com.CMS_Project.dto.request.UserUpdateRequest;
 import com.CMS_Project.dto.response.ApiResponse;
+import com.CMS_Project.dto.response.UserPageResponse;
 import com.CMS_Project.dto.response.UserResponse;
 import com.CMS_Project.service.UserService;
 import jakarta.validation.Valid;
@@ -33,6 +34,16 @@ public class UserController {
     ApiResponse<List<UserResponse>> getAllUsers(){
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getAll())
+                .build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<UserPageResponse> findAll(@RequestParam(required = false) String keyword,
+                                                @RequestParam(required = false) String sort,
+                                                @RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<UserPageResponse>builder()
+                .result(userService.findAll(keyword,sort,page,size))
                 .build();
     }
 

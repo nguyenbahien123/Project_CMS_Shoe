@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentResponse {
      int id;
-     Shoes shoe;
-     Users user;
+     ShoeResponse shoe;
+     UserResponse user;
      String content;
 }

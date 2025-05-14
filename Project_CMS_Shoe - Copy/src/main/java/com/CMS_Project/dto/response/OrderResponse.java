@@ -18,6 +18,6 @@ public class OrderResponse {
      String receivedName;
      String receivedPhone;
      String receivedAddress;
-     OrderStatuses status;
+     OrderStatusResponse status;
      BigDecimal totalPrice;
 }

@@ -17,7 +17,7 @@ public class OrderDetailsResponse {
      OrderResponse order;
      ShoeResponse shoes;
      ShoeVariantResponse shoeVariants;
-     Images images;
+     ImageResponse images;
      int quantity;
      BigDecimal priceShoe;
 }
