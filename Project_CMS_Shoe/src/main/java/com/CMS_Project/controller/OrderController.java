@@ -4,10 +4,7 @@ package com.CMS_Project.controller;
 import com.CMS_Project.dto.request.ColorRequest;
 import com.CMS_Project.dto.request.OrderUpdateRequest;
 import com.CMS_Project.dto.request.PermissionRequest;
-import com.CMS_Project.dto.response.ApiResponse;
-import com.CMS_Project.dto.response.ColorResponse;
-import com.CMS_Project.dto.response.OrderResponse;
-import com.CMS_Project.dto.response.PermissionResponse;
+import com.CMS_Project.dto.response.*;
 import com.CMS_Project.service.ColorService;
 import com.CMS_Project.service.OrderService;
 import lombok.AccessLevel;
@@ -38,6 +35,16 @@ public class OrderController {
     ApiResponse<OrderResponse> update(@PathVariable("orderId") Integer orderId, @RequestBody OrderUpdateRequest orderUpdateRequest) {
         return ApiResponse.<OrderResponse>builder()
                 .result(orderService.update(orderId, orderUpdateRequest))
+                .build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<OrderPageResponse> findAll(@RequestParam(required = false) String keyword,
+                                          @RequestParam(required = false) String sort,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<OrderPageResponse>builder()
+                .result(orderService.findAll(keyword,sort,page,size))
                 .build();
     }
 }
