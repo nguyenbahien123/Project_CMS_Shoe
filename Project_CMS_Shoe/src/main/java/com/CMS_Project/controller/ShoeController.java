@@ -5,6 +5,8 @@ import com.CMS_Project.dto.request.ShoeRequest;
 import com.CMS_Project.dto.response.ApiResponse;
 
 
+import com.CMS_Project.dto.response.BlogPageResponse;
+import com.CMS_Project.dto.response.ShoePageResponse;
 import com.CMS_Project.dto.response.ShoeResponse;
 import com.CMS_Project.service.ShoeService;
 import lombok.AccessLevel;
@@ -49,5 +51,15 @@ public class ShoeController {
     ApiResponse<Void> delete(@PathVariable Integer shoeId) {
         shoeService.delete(shoeId);
         return ApiResponse.<Void>builder().build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<ShoePageResponse> findAll(@RequestParam(required = false) String keyword,
+                                          @RequestParam(required = false) String sort,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<ShoePageResponse>builder()
+                .result(shoeService.findAll(keyword,sort,page,size))
+                .build();
     }
 }
