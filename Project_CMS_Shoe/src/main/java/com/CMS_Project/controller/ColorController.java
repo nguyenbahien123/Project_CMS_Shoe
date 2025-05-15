@@ -5,6 +5,8 @@ package com.CMS_Project.controller;
 import com.CMS_Project.dto.request.ColorRequest;
 import com.CMS_Project.dto.response.ApiResponse;
 
+import com.CMS_Project.dto.response.CategoryPageResponse;
+import com.CMS_Project.dto.response.ColorPageResponse;
 import com.CMS_Project.dto.response.ColorResponse;
 
 import com.CMS_Project.service.ColorService;
@@ -50,5 +52,15 @@ public class ColorController {
     ApiResponse<Void> deleteColor(@PathVariable Integer colorId) {
         colorService.delete(colorId);
         return ApiResponse.<Void>builder().build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<ColorPageResponse> findAll(@RequestParam(required = false) String keyword,
+                                           @RequestParam(required = false) String sort,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<ColorPageResponse>builder()
+                .result(colorService.findAll(keyword,sort,page,size))
+                .build();
     }
 }
