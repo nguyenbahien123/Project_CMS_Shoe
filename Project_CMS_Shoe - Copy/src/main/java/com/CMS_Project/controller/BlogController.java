@@ -2,7 +2,9 @@ package com.CMS_Project.controller;
 
 import com.CMS_Project.dto.request.BlogRequest;
 import com.CMS_Project.dto.response.ApiResponse;
+import com.CMS_Project.dto.response.BlogPageResponse;
 import com.CMS_Project.dto.response.BlogResponse;
+import com.CMS_Project.dto.response.UserPageResponse;
 import com.CMS_Project.service.BlogService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +47,15 @@ public class BlogController {
     ApiResponse<Void> deleteBlogs(@PathVariable Integer blogId) {
         blogService.delete(blogId);
         return ApiResponse.<Void>builder().build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<BlogPageResponse> findAll(@RequestParam(required = false) String keyword,
+                                          @RequestParam(required = false) String sort,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<BlogPageResponse>builder()
+                .result(blogService.findAll(keyword,sort,page,size))
+                .build();
     }
 }

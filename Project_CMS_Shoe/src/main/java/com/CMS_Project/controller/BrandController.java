@@ -4,6 +4,8 @@ package com.CMS_Project.controller;
 import com.CMS_Project.dto.request.BrandRequest;
 import com.CMS_Project.dto.response.ApiResponse;
 
+import com.CMS_Project.dto.response.BlogPageResponse;
+import com.CMS_Project.dto.response.BrandPageResponse;
 import com.CMS_Project.dto.response.BrandResponse;
 import com.CMS_Project.service.BrandService;
 import lombok.AccessLevel;
@@ -48,5 +50,15 @@ public class BrandController {
     ApiResponse<Void> deleteBrand(@PathVariable Integer brandId) {
         brandService.delete(brandId);
         return ApiResponse.<Void>builder().build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<BrandPageResponse> findAll(@RequestParam(required = false) String keyword,
+                                           @RequestParam(required = false) String sort,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<BrandPageResponse>builder()
+                .result(brandService.findAll(keyword,sort,page,size))
+                .build();
     }
 }

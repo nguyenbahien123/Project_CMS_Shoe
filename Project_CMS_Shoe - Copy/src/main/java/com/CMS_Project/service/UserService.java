@@ -2,6 +2,7 @@ package com.CMS_Project.service;
 
 import com.CMS_Project.dto.request.UserCreationRequest;
 import com.CMS_Project.dto.request.UserUpdateRequest;
+import com.CMS_Project.dto.response.UserPageResponse;
 import com.CMS_Project.dto.response.UserResponse;
 import com.CMS_Project.entity.Roles;
 import com.CMS_Project.entity.Users;
@@ -13,12 +14,19 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -58,8 +66,50 @@ public class UserService {
         return userMapper.toUserResponse(users);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(int userId) {
         userRepository.deleteById(userId);
+    }
+
+    public UserPageResponse findAll(String keyword, String sort, int page, int size) {
+        Sort.Order order = new Sort.Order(Sort.Direction.ASC,"id");
+        if(StringUtils.hasLength(sort)){
+            Pattern pattern = Pattern.compile("^(\\w+):(asc|desc)$", Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(sort);
+            if(matcher.find()){
+                String columnName = matcher.group(1);
+                if(matcher.group(2).equalsIgnoreCase("asc")){
+                    order = new Sort.Order(Sort.Direction.ASC,columnName);
+                }else{
+                    order = new Sort.Order(Sort.Direction.DESC,columnName);
+                }
+            }
+        }
+
+        int pageNo = 0;
+        if(page > 0){
+            pageNo = page - 1;
+        }
+
+        Pageable pageable = PageRequest.of(pageNo,size,Sort.by(order));
+
+        Page<Users> entityPage;
+
+        if (StringUtils.hasLength(keyword)){
+            keyword = "%" + keyword.toLowerCase() + "%";
+            entityPage = userRepository.searchByKeyword(keyword, pageable);
+        }else{
+            entityPage = userRepository.findAll(pageable);
+        }
+
+        List<UserResponse> userResponses = entityPage.stream().map(userMapper::toUserResponse).toList();
+
+        UserPageResponse userPageResponse = new UserPageResponse();
+        userPageResponse.setPageNumber(entityPage.getNumber());
+        userPageResponse.setPageSize(entityPage.getSize());
+        userPageResponse.setTotalElements(entityPage.getTotalElements());
+        userPageResponse.setTotalPages(entityPage.getTotalPages());
+        userPageResponse.setUsers(userResponses);
+
+        return userPageResponse;
     }
 }
