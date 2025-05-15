@@ -28,7 +28,8 @@ public enum ErrorCode {
     SHOE_VARIANT_NOT_EXISTED(1014, "Shoe variant not existed ", HttpStatus.NOT_FOUND),
     IMAGE_NOT_EXISTED(1015, "Image not existed ", HttpStatus.NOT_FOUND),
     ORDER_NOT_EXISTED(1016, "Order not existed ", HttpStatus.NOT_FOUND),
-    INVALID_TOKEN(1017, "Invalid token ", HttpStatus.BAD_REQUEST),
+    SLIDER_NOT_EXISTED(1017, "Slider not existed ", HttpStatus.NOT_FOUND),
+    INVALID_TOKEN(1018, "Invalid token ", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

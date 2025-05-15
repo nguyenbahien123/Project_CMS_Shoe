@@ -3,6 +3,8 @@ package com.CMS_Project.controller;
 
 import com.CMS_Project.dto.request.SizeRequest;
 import com.CMS_Project.dto.response.ApiResponse;
+import com.CMS_Project.dto.response.BlogPageResponse;
+import com.CMS_Project.dto.response.SizePageResponse;
 import com.CMS_Project.dto.response.SizeResponse;
 import com.CMS_Project.service.SizeService;
 import lombok.AccessLevel;
@@ -47,5 +49,15 @@ public class SizeController {
     ApiResponse<Void> deleteSize(@PathVariable Integer sizeId) {
         sizeService.delete(sizeId);
         return ApiResponse.<Void>builder().build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<SizePageResponse> findAll(@RequestParam(required = false) String keyword,
+                                          @RequestParam(required = false) String sort,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<SizePageResponse>builder()
+                .result(sizeService.findAll(keyword,sort,page,size))
+                .build();
     }
 }
