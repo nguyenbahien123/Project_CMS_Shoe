@@ -4,6 +4,7 @@ package com.CMS_Project.service;
 
 
 import com.CMS_Project.dto.request.ShoeVariantRequest;
+import com.CMS_Project.dto.response.ShoeVariantPageResponse;
 import com.CMS_Project.dto.response.ShoeVariantResponse;
 import com.CMS_Project.entity.*;
 import com.CMS_Project.exception.AppException;
@@ -15,12 +16,19 @@ import com.CMS_Project.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -79,5 +87,48 @@ public class ShoeVariantService {
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer variantId) {
         shoeVariantRepository.deleteById(variantId);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public ShoeVariantPageResponse findAll(String keyword, String sort, int page, int size) {
+        Sort.Order order = new Sort.Order(Sort.Direction.ASC,"variantId");
+        if(StringUtils.hasLength(sort)){
+            Pattern pattern = Pattern.compile("^(\\w+):(asc|desc)$", Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(sort);
+            if(matcher.find()){
+                String columnName = matcher.group(1);
+                if(matcher.group(2).equalsIgnoreCase("asc")){
+                    order = new Sort.Order(Sort.Direction.ASC,columnName);
+                }else{
+                    order = new Sort.Order(Sort.Direction.DESC,columnName);
+                }
+            }
+        }
+
+        int pageNo = 0;
+        if(page > 0){
+            pageNo = page - 1;
+        }
+
+        Pageable pageable = PageRequest.of(pageNo,size,Sort.by(order));
+
+        Page<ShoeVariants> entityPage;
+
+        if (StringUtils.hasLength(keyword)){
+            keyword = "%" + keyword.toLowerCase() + "%";
+            entityPage = shoeVariantRepository.searchByKeyword(keyword, pageable);
+        }else{
+            entityPage = shoeVariantRepository.findAll(pageable);
+        }
+
+        List<ShoeVariantResponse> shoeVariantResponseList = entityPage.stream().map(shoeVariantMapper::toShoeVariantResponse).toList();
+        ShoeVariantPageResponse shoeVariantPageResponse = new ShoeVariantPageResponse();
+        shoeVariantPageResponse.setPageNumber(entityPage.getNumber());
+        shoeVariantPageResponse.setPageSize(entityPage.getSize());
+        shoeVariantPageResponse.setTotalElements(entityPage.getTotalElements());
+        shoeVariantPageResponse.setTotalPages(entityPage.getTotalPages());
+        shoeVariantPageResponse.setShoeVariants(shoeVariantResponseList);
+        return shoeVariantPageResponse;
+
     }
 }

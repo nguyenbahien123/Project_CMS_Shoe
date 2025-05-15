@@ -6,6 +6,8 @@ import com.CMS_Project.dto.request.ShoeVariantRequest;
 import com.CMS_Project.dto.response.ApiResponse;
 
 
+import com.CMS_Project.dto.response.BlogPageResponse;
+import com.CMS_Project.dto.response.ShoeVariantPageResponse;
 import com.CMS_Project.dto.response.ShoeVariantResponse;
 import com.CMS_Project.service.ShoeVariantService;
 import lombok.AccessLevel;
@@ -50,5 +52,15 @@ public class ShoeVariantController {
     ApiResponse<Void> delete(@PathVariable Integer variantId) {
         shoeVariantService.delete(variantId);
         return ApiResponse.<Void>builder().build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<ShoeVariantPageResponse> findAll(@RequestParam(required = false) String keyword,
+                                                 @RequestParam(required = false) String sort,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<ShoeVariantPageResponse>builder()
+                .result(shoeVariantService.findAll(keyword,sort,page,size))
+                .build();
     }
 }
