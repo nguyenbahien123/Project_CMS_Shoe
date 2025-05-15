@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.CMS_Project.dto.request.PermissionRequest;
 import com.CMS_Project.dto.response.ApiResponse;
+import com.CMS_Project.dto.response.BlogPageResponse;
+import com.CMS_Project.dto.response.PermissionPageResponse;
 import com.CMS_Project.dto.response.PermissionResponse;
 import com.CMS_Project.service.PermissionService;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +49,15 @@ public class PermissionController {
     ApiResponse<Void> delete(@PathVariable String permissionId) {
         permissionService.delete(permissionId);
         return ApiResponse.<Void>builder().build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<PermissionPageResponse> findAll(@RequestParam(required = false) String keyword,
+                                                @RequestParam(required = false) String sort,
+                                                @RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<PermissionPageResponse>builder()
+                .result(permissionService.findAll(keyword,sort,page,size))
+                .build();
     }
 }
