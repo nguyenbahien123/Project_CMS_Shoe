@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.CMS_Project.dto.request.RoleRequest;
 import com.CMS_Project.dto.response.ApiResponse;
+import com.CMS_Project.dto.response.BlogPageResponse;
+import com.CMS_Project.dto.response.RolePageResponse;
 import com.CMS_Project.dto.response.RoleResponse;
 import com.CMS_Project.service.RoleService;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +42,15 @@ public class RoleController {
     ApiResponse<Void> delete(@PathVariable String roleId) {
         roleService.delete(roleId);
         return ApiResponse.<Void>builder().build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<RolePageResponse> findAll(@RequestParam(required = false) String keyword,
+                                          @RequestParam(required = false) String sort,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<RolePageResponse>builder()
+                .result(roleService.findAll(keyword,sort,page,size))
+                .build();
     }
 }

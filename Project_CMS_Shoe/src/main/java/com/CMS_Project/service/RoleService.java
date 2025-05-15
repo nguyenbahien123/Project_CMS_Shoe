@@ -5,7 +5,9 @@ package com.CMS_Project.service;
 
 
 import com.CMS_Project.dto.request.RoleRequest;
+import com.CMS_Project.dto.response.RolePageResponse;
 import com.CMS_Project.dto.response.RoleResponse;
+import com.CMS_Project.entity.Comments;
 import com.CMS_Project.entity.Permissions;
 import com.CMS_Project.entity.Roles;
 import com.CMS_Project.entity.Users;
@@ -20,14 +22,21 @@ import com.CMS_Project.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -63,5 +72,46 @@ public class RoleService {
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(String roleId) {
         roleRepository.deleteById(roleId);
+    }
+
+    public RolePageResponse findAll(String keyword, String sort, int page, int size) {
+        Sort.Order order = new Sort.Order(Sort.Direction.ASC,"name");
+        if(StringUtils.hasLength(sort)){
+            Pattern pattern = Pattern.compile("^(\\w+):(asc|desc)$", Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(sort);
+            if(matcher.find()){
+                String columnName = matcher.group(1);
+                if(matcher.group(2).equalsIgnoreCase("asc")){
+                    order = new Sort.Order(Sort.Direction.ASC,columnName);
+                }else{
+                    order = new Sort.Order(Sort.Direction.DESC,columnName);
+                }
+            }
+        }
+
+        int pageNo = 0;
+        if(page > 0){
+            pageNo = page - 1;
+        }
+
+        Pageable pageable = PageRequest.of(pageNo,size,Sort.by(order));
+
+        Page<Roles> entityPage;
+
+        if (StringUtils.hasLength(keyword)){
+            keyword = "%" + keyword.toLowerCase() + "%";
+            entityPage = roleRepository.searchByKeyword(keyword, pageable);
+        }else{
+            entityPage = roleRepository.findAll(pageable);
+        }
+
+        List<RoleResponse> roleResponseList = entityPage.stream().map(roleMapper::toRoleResponse).toList();
+        RolePageResponse rolePageResponse = new RolePageResponse();
+        rolePageResponse.setRoles(roleResponseList);
+        rolePageResponse.setPageNumber(entityPage.getNumber());
+        rolePageResponse.setPageSize(entityPage.getSize());
+        rolePageResponse.setTotalElements(entityPage.getTotalElements());
+        rolePageResponse.setTotalPages(entityPage.getTotalPages());
+        return rolePageResponse;
     }
 }
