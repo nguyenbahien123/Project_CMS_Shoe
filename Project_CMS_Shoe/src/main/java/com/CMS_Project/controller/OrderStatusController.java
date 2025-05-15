@@ -2,8 +2,7 @@ package com.CMS_Project.controller;
 
 
 import com.CMS_Project.dto.request.OrderStatusRequest;
-import com.CMS_Project.dto.response.ApiResponse;
-import com.CMS_Project.dto.response.OrderStatusResponse;
+import com.CMS_Project.dto.response.*;
 import com.CMS_Project.service.OrderStatusService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +46,15 @@ public class OrderStatusController {
     ApiResponse<Void> delete(@PathVariable Integer colorId) {
         orderStatusService.delete(colorId);
         return ApiResponse.<Void>builder().build();
+    }
+
+    @GetMapping("/list")
+    ApiResponse<OrderStatusPageResponse> findAll(@RequestParam(required = false) String keyword,
+                                                 @RequestParam(required = false) String sort,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<OrderStatusPageResponse>builder()
+                .result(orderStatusService.findAll(keyword,sort,page,size))
+                .build();
     }
 }
