@@ -12,7 +12,10 @@ import java.util.Optional;
 @Repository
 public interface ColorRepository extends JpaRepository<Colors, Integer> {
 
-    @Query(value= "select u from Colors u where u.isActive=true AND u.name LIKE:keyword")
+    @Query(value = "SELECT u FROM Colors u WHERE u.isActive = true AND (" +
+            "LOWER(u.createdBy) LIKE :keyword OR " +
+            "LOWER(u.updatedBy) LIKE :keyword OR " +
+            "LOWER(u.name) LIKE :keyword)")
     Page<Colors> searchByKeyword(String keyword, Pageable pageable);
 
     Optional<Colors> findByName(String colorName);

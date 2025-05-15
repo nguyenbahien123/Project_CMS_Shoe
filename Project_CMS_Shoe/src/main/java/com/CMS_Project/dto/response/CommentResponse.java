@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -19,4 +20,9 @@ public class CommentResponse {
      ShoeResponse shoe;
      UserResponse user;
      String content;
+     LocalDateTime createdAt;
+     LocalDateTime updatedAt;
+     String createdBy;
+     String updatedBy;
+     Boolean isActive;
 }

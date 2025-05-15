@@ -12,7 +12,10 @@ import java.util.Optional;
 @Repository
 public interface BrandsRepository extends JpaRepository<Brands, Integer> {
 
-    @Query(value = "Select u from Brands u where u.isActive = True And lower(u.brandName) Like :keyword ")
+    @Query(value = "SELECT u FROM Brands u WHERE u.isActive = true AND (" +
+            "LOWER(u.createdBy) LIKE :keyword OR " +
+            "LOWER(u.updatedBy) LIKE :keyword OR " +
+            "LOWER(u.brandName) LIKE :keyword)")
     Page<Brands> searchByKeyword(String keyword, Pageable pageable);
 
 

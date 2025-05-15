@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -20,4 +21,9 @@ public class OrderResponse {
      String receivedAddress;
      OrderStatusResponse status;
      BigDecimal totalPrice;
+     LocalDateTime createdAt;
+     LocalDateTime updatedAt;
+     String createdBy;
+     String updatedBy;
+     Boolean isActive;
 }

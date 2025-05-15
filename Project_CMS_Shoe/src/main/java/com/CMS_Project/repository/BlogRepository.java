@@ -15,6 +15,8 @@ public interface BlogRepository extends JpaRepository<Blogs, Integer> {
             "LOWER(u.title) LIKE :keyword OR " +
             "LOWER(u.imageUrl) LIKE :keyword OR " +
             "LOWER(u.content) LIKE :keyword OR " +
+            "LOWER(u.createdBy) LIKE :keyword OR " +
+            "LOWER(u.updatedBy) LIKE :keyword OR " +
             "LOWER(u.shortDescription) LIKE :keyword)")
     Page<Blogs> searchByKeyword(String keyword, Pageable pageable);
 }

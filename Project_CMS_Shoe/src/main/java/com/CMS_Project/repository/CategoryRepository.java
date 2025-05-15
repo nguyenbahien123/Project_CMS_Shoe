@@ -13,7 +13,10 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<Categories, Integer> {
 
-    @Query(value= "select u from Categories u where u.isActive=true AND u.categoryName LIKE:keyword")
+    @Query(value = "SELECT u FROM Categories u WHERE u.isActive = true AND (" +
+            "LOWER(u.createdBy) LIKE :keyword OR " +
+            "LOWER(u.updatedBy) LIKE :keyword OR " +
+            "LOWER(u.categoryName) LIKE :keyword)")
     Page<Categories> searchByKeyword(String keyword, Pageable pageable);
 
     Optional<Categories> findByCategoryName(String categoryName);
