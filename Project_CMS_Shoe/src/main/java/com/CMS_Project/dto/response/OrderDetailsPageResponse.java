@@ -1,5 +1,6 @@
 package com.CMS_Project.dto.response;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,6 @@ import java.util.List;
 
 @Getter
 @Setter
-public class BlogPageResponse extends PageResponseAbstract{
-    List<BlogResponse> blogs;
+public class OrderDetailsPageResponse extends PageResponseAbstract{
+    List<OrderDetailsResponse> orderDetails;
 }

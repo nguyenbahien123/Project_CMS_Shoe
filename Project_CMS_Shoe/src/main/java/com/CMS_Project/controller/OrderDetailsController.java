@@ -2,6 +2,8 @@ package com.CMS_Project.controller;
 
 
 import com.CMS_Project.dto.response.ApiResponse;
+import com.CMS_Project.dto.response.BlogPageResponse;
+import com.CMS_Project.dto.response.OrderDetailsPageResponse;
 import com.CMS_Project.dto.response.OrderDetailsResponse;
 import com.CMS_Project.service.OrderDetailsService;
 import lombok.AccessLevel;
@@ -28,4 +30,13 @@ public class OrderDetailsController {
                 .build();
     }
 
+    @GetMapping("/list")
+    ApiResponse<OrderDetailsPageResponse> findAll(@RequestParam(required = false) String keyword,
+                                                  @RequestParam(required = false) String sort,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "20") int size){
+        return ApiResponse.<OrderDetailsPageResponse>builder()
+                .result(orderDetailsService.findAll(keyword,sort,page,size))
+                .build();
+    }
 }
