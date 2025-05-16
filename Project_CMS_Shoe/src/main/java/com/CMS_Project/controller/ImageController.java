@@ -4,9 +4,6 @@ package com.CMS_Project.controller;
 
 import com.CMS_Project.dto.request.ImageRequest;
 import com.CMS_Project.dto.response.ApiResponse;
-
-
-import com.CMS_Project.dto.response.BlogPageResponse;
 import com.CMS_Project.dto.response.ImagePageResponse;
 import com.CMS_Project.dto.response.ImageResponse;
 import com.CMS_Project.service.ImageService;
@@ -14,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +25,7 @@ public class ImageController {
 
     ImageService imageService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     ApiResponse<ImageResponse> create(@RequestBody ImageRequest imageRequest){
         return ApiResponse.<ImageResponse>builder()
@@ -34,6 +33,7 @@ public class ImageController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{imageId}")
     ApiResponse<ImageResponse> update(@PathVariable Integer imageId, @RequestBody ImageRequest shoeVariantRequest){
         return ApiResponse.<ImageResponse>builder()
@@ -41,6 +41,7 @@ public class ImageController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     ApiResponse<List<ImageResponse>> getAll() {
         return ApiResponse.<List<ImageResponse>>builder()
@@ -48,6 +49,7 @@ public class ImageController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{imageId}")
     ApiResponse<Void> delete(@PathVariable Integer imageId) {
         imageService.delete(imageId);

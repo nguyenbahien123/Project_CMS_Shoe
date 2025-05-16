@@ -1,5 +1,6 @@
 package com.CMS_Project.service;
 
+import com.CMS_Project.constant.PredefinedRole;
 import com.CMS_Project.dto.request.UserCreationRequest;
 import com.CMS_Project.dto.request.UserUpdateRequest;
 import com.CMS_Project.dto.response.UserPageResponse;
@@ -18,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -43,13 +43,13 @@ public class UserService {
         user.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
-        Roles role = roleRepository.findById("USER").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+        Roles role = roleRepository.findById(PredefinedRole.USER_ROLE).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
         user.setRoles(role);
         userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     public List<UserResponse> getAll() {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
@@ -70,7 +70,7 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     public UserPageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"id");
         if(StringUtils.hasLength(sort)){

@@ -3,9 +3,6 @@ package com.CMS_Project.controller;
 
 import com.CMS_Project.dto.request.ShoeRequest;
 import com.CMS_Project.dto.response.ApiResponse;
-
-
-import com.CMS_Project.dto.response.BlogPageResponse;
 import com.CMS_Project.dto.response.ShoePageResponse;
 import com.CMS_Project.dto.response.ShoeResponse;
 import com.CMS_Project.service.ShoeService;
@@ -13,8 +10,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -26,6 +23,7 @@ public class ShoeController {
 
     ShoeService shoeService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     ApiResponse<ShoeResponse> create(@RequestBody ShoeRequest shoeRequest){
         return ApiResponse.<ShoeResponse>builder()
@@ -33,6 +31,7 @@ public class ShoeController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{shoeId}")
     ApiResponse<ShoeResponse> update(@PathVariable Integer shoeId, @RequestBody ShoeRequest shoeRequest){
         return ApiResponse.<ShoeResponse>builder()
@@ -40,6 +39,7 @@ public class ShoeController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     ApiResponse<List<ShoeResponse>> getAll() {
         return ApiResponse.<List<ShoeResponse>>builder()
@@ -47,12 +47,14 @@ public class ShoeController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{shoeId}")
     ApiResponse<Void> delete(@PathVariable Integer shoeId) {
         shoeService.delete(shoeId);
         return ApiResponse.<Void>builder().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/list")
     ApiResponse<ShoePageResponse> findAll(@RequestParam(required = false) String keyword,
                                           @RequestParam(required = false) String sort,

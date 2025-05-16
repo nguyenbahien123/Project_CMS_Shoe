@@ -1,10 +1,7 @@
 package com.CMS_Project.mapper;
 
-import com.CMS_Project.dto.request.ColorRequest;
 import com.CMS_Project.dto.request.SizeRequest;
-import com.CMS_Project.dto.response.ColorResponse;
 import com.CMS_Project.dto.response.SizeResponse;
-import com.CMS_Project.entity.Colors;
 import com.CMS_Project.entity.Sizes;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

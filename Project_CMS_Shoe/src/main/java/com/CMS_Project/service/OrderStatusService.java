@@ -2,8 +2,6 @@ package com.CMS_Project.service;
 
 
 
-
-
 import com.CMS_Project.dto.request.OrderStatusRequest;
 import com.CMS_Project.dto.response.OrderStatusPageResponse;
 import com.CMS_Project.dto.response.OrderStatusResponse;
@@ -11,8 +9,6 @@ import com.CMS_Project.entity.OrderStatuses;
 import com.CMS_Project.entity.Users;
 import com.CMS_Project.exception.AppException;
 import com.CMS_Project.exception.ErrorCode;
-
-
 import com.CMS_Project.mapper.OrderStatusMapper;
 import com.CMS_Project.repository.OrderStatusRepository;
 import com.CMS_Project.repository.UserRepository;
@@ -23,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -42,7 +37,6 @@ public class OrderStatusService {
     UserRepository userRepository;
     OrderStatusMapper orderStatusMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public OrderStatusResponse create(OrderStatusRequest orderStatusRequest) {
         OrderStatuses orderStatuses = orderStatusMapper.toOrderStatus(orderStatusRequest);
         orderStatuses.setCreatedAt(LocalDateTime.now());
@@ -55,7 +49,6 @@ public class OrderStatusService {
         return orderStatusMapper.toOrderStatusResponse(orderStatuses);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public OrderStatusResponse update(Integer statusId, OrderStatusRequest orderStatusRequest) {
         OrderStatuses orderStatuses = orderStatusRepository.findById(statusId).orElseThrow(() -> new AppException(ErrorCode.ORDER_STATUS_NOT_EXISTED));
         orderStatusMapper.updateOrderStatus(orderStatuses,orderStatusRequest);
@@ -67,12 +60,10 @@ public class OrderStatusService {
         return orderStatusMapper.toOrderStatusResponse(orderStatuses);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<OrderStatusResponse> getAll() {
         return orderStatusRepository.findAll().stream().map(orderStatusMapper::toOrderStatusResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer statusId) {
         orderStatusRepository.deleteById(statusId);
     }

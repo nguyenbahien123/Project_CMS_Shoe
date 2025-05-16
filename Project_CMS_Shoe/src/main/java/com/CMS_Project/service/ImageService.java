@@ -9,7 +9,6 @@ import com.CMS_Project.dto.response.ImageResponse;
 import com.CMS_Project.entity.*;
 import com.CMS_Project.exception.AppException;
 import com.CMS_Project.exception.ErrorCode;
-
 import com.CMS_Project.mapper.ImageMapper;
 import com.CMS_Project.repository.ImageRepository;
 import com.CMS_Project.repository.ShoeVariantRepository;
@@ -21,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -41,7 +39,6 @@ public class ImageService {
     ShoeVariantRepository shoeVariantRepository;
     ImageMapper imageMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ImageResponse create(ImageRequest imageRequest) {
         Images image = imageMapper.toImages(imageRequest);
         image.setCreatedAt(LocalDateTime.now());
@@ -56,7 +53,6 @@ public class ImageService {
         return imageMapper.toImageResponse(image);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ImageResponse update(Integer imageId, ImageRequest imageRequest) {
         Images images = imageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_EXISTED));
         imageMapper.updateShoe(images, imageRequest);
@@ -70,17 +66,14 @@ public class ImageService {
         return imageMapper.toImageResponse(images);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<ImageResponse> getAll() {
         return imageRepository.findAll().stream().map(imageMapper::toImageResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer imageId) {
         imageRepository.deleteById(imageId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ImagePageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"imageId");
         if(StringUtils.hasLength(sort)){

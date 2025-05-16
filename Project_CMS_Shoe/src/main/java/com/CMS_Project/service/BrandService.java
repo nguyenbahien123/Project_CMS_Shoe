@@ -3,7 +3,6 @@ package com.CMS_Project.service;
 import com.CMS_Project.dto.request.BrandRequest;
 import com.CMS_Project.dto.response.BrandPageResponse;
 import com.CMS_Project.dto.response.BrandResponse;
-import com.CMS_Project.entity.Blogs;
 import com.CMS_Project.entity.Brands;
 import com.CMS_Project.entity.Users;
 import com.CMS_Project.exception.AppException;
@@ -18,11 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -37,7 +34,6 @@ public class BrandService {
     UserRepository userRepository;
     BrandMapper brandMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public BrandResponse create(BrandRequest brandRequest) {
         Brands brand = brandMapper.toBrand(brandRequest);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -50,7 +46,6 @@ public class BrandService {
         return brandMapper.toBrandResponse(brand);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public BrandResponse update(Integer brandId, BrandRequest brandRequest) {
         Brands brand = brandsRepository.findById(brandId).orElseThrow(()-> new AppException(ErrorCode.BRAND_NOT_EXISTED));
         brandMapper.updateBrand(brand, brandRequest);
@@ -62,18 +57,15 @@ public class BrandService {
         return brandMapper.toBrandResponse(brand);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<BrandResponse> getAll() {
         return brandsRepository.findAll().stream().map(brandMapper::toBrandResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer brandId) {
         brandsRepository.deleteById(brandId);
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
     public BrandPageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"brandId");
         if(StringUtils.hasLength(sort)){

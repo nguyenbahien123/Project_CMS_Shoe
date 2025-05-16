@@ -3,7 +3,6 @@ package com.CMS_Project.service;
 import com.CMS_Project.dto.request.BlogRequest;
 import com.CMS_Project.dto.response.BlogPageResponse;
 import com.CMS_Project.dto.response.BlogResponse;
-import com.CMS_Project.dto.response.UserPageResponse;
 import com.CMS_Project.entity.Blogs;
 import com.CMS_Project.entity.Users;
 import com.CMS_Project.exception.AppException;
@@ -18,11 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -37,7 +34,7 @@ public class BlogService {
     BlogMapper blogMapper;
     UserRepository userRepository;
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     public BlogResponse create(BlogRequest blogRequest) {
         Blogs blogs = blogMapper.toBlog(blogRequest);
         blogs.setCreatedAt(LocalDateTime.now());
@@ -51,12 +48,12 @@ public class BlogService {
         return blogMapper.toBlogResponse(blogs);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     public List<BlogResponse> getAll() {
         return blogRepository.findAll().stream().map(blogMapper::toBlogResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     public BlogResponse update(int id,BlogRequest blogRequest) {
         Blogs blog = blogRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
         blogMapper.updateBlog(blog, blogRequest);
@@ -69,14 +66,13 @@ public class BlogService {
         return blogMapper.toBlogResponse(blog);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     public void delete(Integer blogId) {
         blogRepository.deleteById(blogId);
     }
 
 
 
-    @PreAuthorize("hasRole('ADMIN')")
     public BlogPageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"blogId");
         if(StringUtils.hasLength(sort)){

@@ -7,13 +7,10 @@ package com.CMS_Project.service;
 import com.CMS_Project.dto.request.SizeRequest;
 import com.CMS_Project.dto.response.SizePageResponse;
 import com.CMS_Project.dto.response.SizeResponse;
-import com.CMS_Project.entity.Comments;
 import com.CMS_Project.entity.Sizes;
 import com.CMS_Project.entity.Users;
 import com.CMS_Project.exception.AppException;
 import com.CMS_Project.exception.ErrorCode;
-
-
 import com.CMS_Project.mapper.SizeMapper;
 import com.CMS_Project.repository.SizeRepository;
 import com.CMS_Project.repository.UserRepository;
@@ -24,11 +21,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -43,7 +38,6 @@ public class SizeService {
     UserRepository userRepository;
     SizeMapper sizeMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public SizeResponse create(SizeRequest sizeRequest) {
         Sizes size = sizeMapper.toSize(sizeRequest);
         size.setCreatedAt(LocalDateTime.now());
@@ -56,7 +50,6 @@ public class SizeService {
         return sizeMapper.toSizeResponse(size);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public SizeResponse update(Integer sizeId, SizeRequest sizeRequest) {
         Sizes sizes = sizeRepository.findById(sizeId).orElseThrow(() -> new AppException(ErrorCode.SIZE_NOT_EXISTED));
         sizeMapper.updateSize(sizes, sizeRequest);
@@ -68,12 +61,10 @@ public class SizeService {
         return sizeMapper.toSizeResponse(sizeRepository.save(sizes));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<SizeResponse> getAll() {
         return sizeRepository.findAll().stream().map(sizeMapper::toSizeResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer sizeId) {
         sizeRepository.deleteById(sizeId);
     }

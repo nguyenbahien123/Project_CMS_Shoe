@@ -6,7 +6,6 @@ package com.CMS_Project.service;
 import com.CMS_Project.dto.request.CategoryRequest;
 import com.CMS_Project.dto.response.CategoryPageResponse;
 import com.CMS_Project.dto.response.CategoryResponse;
-import com.CMS_Project.entity.Blogs;
 import com.CMS_Project.entity.Categories;
 import com.CMS_Project.entity.Users;
 import com.CMS_Project.exception.AppException;
@@ -24,11 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -44,7 +41,6 @@ public class CategoryService {
     CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse create(CategoryRequest categoryRequest) {
         Categories category = categoryMapper.toCategory(categoryRequest);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -57,7 +53,6 @@ public class CategoryService {
         return categoryMapper.toCategoryResponse(category);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse update(Integer categoryId, CategoryRequest categoryRequest) {
         Categories category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
         categoryMapper.updateCategory(category, categoryRequest);
@@ -69,17 +64,14 @@ public class CategoryService {
         return categoryMapper.toCategoryResponse(category);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<CategoryResponse> getAll() {
         return categoryRepository.findAll().stream().map(categoryMapper::toCategoryResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer categoryId) {
         categoryRepository.deleteById(categoryId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public CategoryPageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"categoryId");
         if(StringUtils.hasLength(sort)){

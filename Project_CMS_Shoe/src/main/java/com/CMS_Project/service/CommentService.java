@@ -3,7 +3,6 @@ package com.CMS_Project.service;
 
 import com.CMS_Project.dto.response.CommentPageResponse;
 import com.CMS_Project.dto.response.CommentResponse;
-import com.CMS_Project.entity.Blogs;
 import com.CMS_Project.entity.Comments;
 import com.CMS_Project.mapper.CommentMapper;
 import com.CMS_Project.repository.CommentRepository;
@@ -14,10 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,12 +27,10 @@ public class CommentService {
     CommentRepository commentRepository;
     CommentMapper commentMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<CommentResponse> getAll() {
         return commentRepository.findAll().stream().map(commentMapper::toCommentResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public CommentPageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"commentId");
         if(StringUtils.hasLength(sort)){

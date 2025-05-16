@@ -1,7 +1,5 @@
 package com.CMS_Project.repository;
 
-import com.CMS_Project.entity.Blogs;
-import com.CMS_Project.entity.Comments;
 import com.CMS_Project.entity.Sliders;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,5 @@
 package com.CMS_Project.repository;
 
-import com.CMS_Project.entity.OrderDetails;
 import com.CMS_Project.entity.Orders;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

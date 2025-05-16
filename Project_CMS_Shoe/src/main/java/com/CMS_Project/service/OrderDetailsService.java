@@ -3,7 +3,6 @@ package com.CMS_Project.service;
 
 import com.CMS_Project.dto.response.OrderDetailsPageResponse;
 import com.CMS_Project.dto.response.OrderDetailsResponse;
-import com.CMS_Project.entity.Images;
 import com.CMS_Project.entity.OrderDetails;
 import com.CMS_Project.mapper.OrderDetailsMapper;
 import com.CMS_Project.repository.OrderDetailRepository;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,12 +28,10 @@ public class OrderDetailsService {
     OrderDetailRepository orderDetailRepository;
     OrderDetailsMapper orderDetailsMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<OrderDetailsResponse> getAll() {
         return orderDetailRepository.findAll().stream().map(orderDetailsMapper::toOrderDetailsResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public OrderDetailsPageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"orderDetailId");
         if(StringUtils.hasLength(sort)){

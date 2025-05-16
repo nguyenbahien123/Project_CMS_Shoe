@@ -3,7 +3,6 @@ package com.CMS_Project.controller;
 
 import com.CMS_Project.dto.request.SizeRequest;
 import com.CMS_Project.dto.response.ApiResponse;
-import com.CMS_Project.dto.response.BlogPageResponse;
 import com.CMS_Project.dto.response.SizePageResponse;
 import com.CMS_Project.dto.response.SizeResponse;
 import com.CMS_Project.service.SizeService;
@@ -11,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +24,7 @@ public class SizeController {
 
     SizeService sizeService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     ApiResponse<SizeResponse> createSize(@RequestBody SizeRequest sizeRequest){
         return ApiResponse.<SizeResponse>builder()
@@ -31,6 +32,7 @@ public class SizeController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{sizeId}")
     ApiResponse<SizeResponse> updateSize(@PathVariable Integer sizeId, @RequestBody SizeRequest sizeRequest){
         return ApiResponse.<SizeResponse>builder()
@@ -38,6 +40,7 @@ public class SizeController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     ApiResponse<List<SizeResponse>> getAllSizes() {
         return ApiResponse.<List<SizeResponse>>builder()
@@ -45,12 +48,14 @@ public class SizeController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{sizeId}")
     ApiResponse<Void> deleteSize(@PathVariable Integer sizeId) {
         sizeService.delete(sizeId);
         return ApiResponse.<Void>builder().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/list")
     ApiResponse<SizePageResponse> findAll(@RequestParam(required = false) String keyword,
                                           @RequestParam(required = false) String sort,

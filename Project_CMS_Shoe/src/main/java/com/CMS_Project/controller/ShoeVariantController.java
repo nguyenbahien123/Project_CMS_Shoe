@@ -4,9 +4,6 @@ package com.CMS_Project.controller;
 
 import com.CMS_Project.dto.request.ShoeVariantRequest;
 import com.CMS_Project.dto.response.ApiResponse;
-
-
-import com.CMS_Project.dto.response.BlogPageResponse;
 import com.CMS_Project.dto.response.ShoeVariantPageResponse;
 import com.CMS_Project.dto.response.ShoeVariantResponse;
 import com.CMS_Project.service.ShoeVariantService;
@@ -14,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +25,7 @@ public class ShoeVariantController {
 
     ShoeVariantService shoeVariantService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     ApiResponse<ShoeVariantResponse> create(@RequestBody ShoeVariantRequest shoeVariantRequest){
         return ApiResponse.<ShoeVariantResponse>builder()
@@ -34,6 +33,7 @@ public class ShoeVariantController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{variantId}")
     ApiResponse<ShoeVariantResponse> update(@PathVariable Integer variantId, @RequestBody ShoeVariantRequest shoeVariantRequest){
         return ApiResponse.<ShoeVariantResponse>builder()
@@ -41,6 +41,7 @@ public class ShoeVariantController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     ApiResponse<List<ShoeVariantResponse>> getAll() {
         return ApiResponse.<List<ShoeVariantResponse>>builder()
@@ -48,12 +49,14 @@ public class ShoeVariantController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{variantId}")
     ApiResponse<Void> delete(@PathVariable Integer variantId) {
         shoeVariantService.delete(variantId);
         return ApiResponse.<Void>builder().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/list")
     ApiResponse<ShoeVariantPageResponse> findAll(@RequestParam(required = false) String keyword,
                                                  @RequestParam(required = false) String sort,

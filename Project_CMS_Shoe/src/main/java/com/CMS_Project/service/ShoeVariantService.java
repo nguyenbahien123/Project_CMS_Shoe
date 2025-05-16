@@ -9,8 +9,6 @@ import com.CMS_Project.dto.response.ShoeVariantResponse;
 import com.CMS_Project.entity.*;
 import com.CMS_Project.exception.AppException;
 import com.CMS_Project.exception.ErrorCode;
-
-
 import com.CMS_Project.mapper.ShoeVariantMapper;
 import com.CMS_Project.repository.*;
 import lombok.AccessLevel;
@@ -20,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -42,7 +39,6 @@ public class ShoeVariantService {
     ShoeRepository shoeRepository;
     SizeRepository sizeRepository;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ShoeVariantResponse create(ShoeVariantRequest shoeVariantRequest) {
         ShoeVariants shoeVariants = shoeVariantMapper.toShoeVariant(shoeVariantRequest);
         shoeVariants.setCreatedAt(LocalDateTime.now());
@@ -61,7 +57,6 @@ public class ShoeVariantService {
         return shoeVariantMapper.toShoeVariantResponse(shoeVariants);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ShoeVariantResponse update(Integer variantId, ShoeVariantRequest shoeVariantRequest) {
         ShoeVariants shoeVariants = shoeVariantRepository.findById(variantId).orElseThrow(()-> new AppException(ErrorCode.SHOE_VARIANT_NOT_EXISTED));
         shoeVariantMapper.updateShoe(shoeVariants,shoeVariantRequest);
@@ -79,17 +74,14 @@ public class ShoeVariantService {
         return shoeVariantMapper.toShoeVariantResponse(shoeVariants);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<ShoeVariantResponse> getAll() {
         return shoeVariantRepository.findAll().stream().map(shoeVariantMapper::toShoeVariantResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer variantId) {
         shoeVariantRepository.deleteById(variantId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ShoeVariantPageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"variantId");
         if(StringUtils.hasLength(sort)){

@@ -7,13 +7,10 @@ package com.CMS_Project.service;
 import com.CMS_Project.dto.request.PermissionRequest;
 import com.CMS_Project.dto.response.PermissionPageResponse;
 import com.CMS_Project.dto.response.PermissionResponse;
-import com.CMS_Project.entity.Comments;
 import com.CMS_Project.entity.Permissions;
 import com.CMS_Project.entity.Users;
 import com.CMS_Project.exception.AppException;
 import com.CMS_Project.exception.ErrorCode;
-
-
 import com.CMS_Project.mapper.PermissionMapper;
 import com.CMS_Project.repository.PermissionRepository;
 import com.CMS_Project.repository.UserRepository;
@@ -24,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -44,7 +40,6 @@ public class PermissionService {
     PermissionMapper permissionMapper;
 
 
-    @PreAuthorize("hasRole('ADMIN')")
     public PermissionResponse create(PermissionRequest permissionRequest) {
         Permissions permissions = permissionMapper.toPermission(permissionRequest);
         permissions.setCreatedAt(LocalDateTime.now());
@@ -57,7 +52,6 @@ public class PermissionService {
         return permissionMapper.toPermissionResponse(permissions);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public PermissionResponse update(String permissionId, PermissionRequest permissionRequest) {
         Permissions permissions = permissionRepository.findById(permissionId).orElseThrow(()-> new AppException(ErrorCode.PERMISSION_NOT_EXISTED));
         permissionMapper.updatePermission(permissions,permissionRequest);
@@ -69,12 +63,10 @@ public class PermissionService {
         return permissionMapper.toPermissionResponse(permissions);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<PermissionResponse> getAll() {
         return permissionRepository.findAll().stream().map(permissionMapper::toPermissionResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(String permissionId) {
         permissionRepository.deleteById(permissionId);
     }

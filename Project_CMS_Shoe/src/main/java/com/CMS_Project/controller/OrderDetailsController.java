@@ -2,7 +2,6 @@ package com.CMS_Project.controller;
 
 
 import com.CMS_Project.dto.response.ApiResponse;
-import com.CMS_Project.dto.response.BlogPageResponse;
 import com.CMS_Project.dto.response.OrderDetailsPageResponse;
 import com.CMS_Project.dto.response.OrderDetailsResponse;
 import com.CMS_Project.service.OrderDetailsService;
@@ -10,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +23,7 @@ public class OrderDetailsController {
 
     OrderDetailsService orderDetailsService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     ApiResponse<List<OrderDetailsResponse>> getAllColor() {
         return ApiResponse.<List<OrderDetailsResponse>>builder()
@@ -30,6 +31,7 @@ public class OrderDetailsController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/list")
     ApiResponse<OrderDetailsPageResponse> findAll(@RequestParam(required = false) String keyword,
                                                   @RequestParam(required = false) String sort,

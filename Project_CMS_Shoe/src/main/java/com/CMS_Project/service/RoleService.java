@@ -7,14 +7,11 @@ package com.CMS_Project.service;
 import com.CMS_Project.dto.request.RoleRequest;
 import com.CMS_Project.dto.response.RolePageResponse;
 import com.CMS_Project.dto.response.RoleResponse;
-import com.CMS_Project.entity.Comments;
 import com.CMS_Project.entity.Permissions;
 import com.CMS_Project.entity.Roles;
 import com.CMS_Project.entity.Users;
 import com.CMS_Project.exception.AppException;
 import com.CMS_Project.exception.ErrorCode;
-
-
 import com.CMS_Project.mapper.RoleMapper;
 import com.CMS_Project.repository.PermissionRepository;
 import com.CMS_Project.repository.RoleRepository;
@@ -26,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -48,7 +44,6 @@ public class RoleService {
     RoleMapper roleMapper;
     PermissionRepository permissionRepository;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse create(RoleRequest roleRequest) {
         Roles role = roleMapper.toRole(roleRequest);
         role.setCreatedAt(LocalDateTime.now());
@@ -64,12 +59,10 @@ public class RoleService {
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getAll() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(String roleId) {
         roleRepository.deleteById(roleId);
     }

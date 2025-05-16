@@ -9,6 +9,7 @@ import org.mapstruct.MappingTarget;
 @Mapper
 public interface ColorMapper {
 
+
     Colors toColor(ColorRequest colorRequest);
 
     ColorResponse toColorResponse(Colors colors);

@@ -2,15 +2,12 @@ package com.CMS_Project.service;
 
 
 
-
-
 import com.CMS_Project.dto.request.SliderRequest;
 import com.CMS_Project.dto.response.SliderPageResponse;
 import com.CMS_Project.dto.response.SliderResponse;
 import com.CMS_Project.entity.*;
 import com.CMS_Project.exception.AppException;
 import com.CMS_Project.exception.ErrorCode;
-
 import com.CMS_Project.mapper.SliderMapper;
 import com.CMS_Project.repository.*;
 import lombok.AccessLevel;
@@ -20,11 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -41,7 +36,6 @@ public class SliderService {
     ShoeRepository shoeRepository;
     SliderRepository sliderRepository;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public SliderResponse create(SliderRequest sliderRequest) {
         Sliders sliders = sliderMapper.toSlider(sliderRequest);
         sliders.setCreatedAt(LocalDateTime.now());
@@ -56,7 +50,6 @@ public class SliderService {
         return sliderMapper.toSliderResponse(sliders);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public SliderResponse update(Integer sliderId, SliderRequest sliderRequest) {
         Sliders sliders = sliderRepository.findById(sliderId).orElseThrow(() -> new AppException(ErrorCode.SLIDER_NOT_EXISTED));
         sliderMapper.updateSlider(sliders, sliderRequest);
@@ -70,17 +63,14 @@ public class SliderService {
         return sliderMapper.toSliderResponse(sliders);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<SliderResponse> getAll() {
         return sliderRepository.findAll().stream().map(sliderMapper::toSliderResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer sliderId) {
         sliderRepository.deleteById(sliderId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public SliderPageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"sliderId");
         if(StringUtils.hasLength(sort)){

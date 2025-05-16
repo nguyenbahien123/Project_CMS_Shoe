@@ -6,13 +6,10 @@ package com.CMS_Project.service;
 import com.CMS_Project.dto.request.ColorRequest;
 import com.CMS_Project.dto.response.ColorPageResponse;
 import com.CMS_Project.dto.response.ColorResponse;
-import com.CMS_Project.entity.Categories;
 import com.CMS_Project.entity.Colors;
 import com.CMS_Project.entity.Users;
 import com.CMS_Project.exception.AppException;
 import com.CMS_Project.exception.ErrorCode;
-
-
 import com.CMS_Project.mapper.ColorMapper;
 import com.CMS_Project.repository.ColorRepository;
 import com.CMS_Project.repository.UserRepository;
@@ -23,11 +20,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -42,7 +37,6 @@ public class ColorService {
     UserRepository userRepository;
     ColorMapper colorMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ColorResponse create(ColorRequest colorRequest) {
         Colors colors = colorMapper.toColor(colorRequest);
         colors.setCreatedAt(LocalDateTime.now());
@@ -55,7 +49,6 @@ public class ColorService {
         return colorMapper.toColorResponse(colors);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ColorResponse update(Integer colorId, ColorRequest colorRequest) {
         Colors color = colorRepository.findById(colorId).orElseThrow(()-> new AppException(ErrorCode.COLOR_NOT_EXISTED));
         colorMapper.updateColor(color, colorRequest);
@@ -67,17 +60,14 @@ public class ColorService {
         return colorMapper.toColorResponse(color);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<ColorResponse> getAll() {
         return colorRepository.findAll().stream().map(colorMapper::toColorResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Integer colorId) {
         colorRepository.deleteById(colorId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ColorPageResponse findAll(String keyword, String sort, int page, int size) {
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"colorId");
         if(StringUtils.hasLength(sort)){
