@@ -41,17 +41,9 @@ public class ImageServiceImpl implements ImageService {
 
     public ImageResponse create(int variant, ImageRequest imageRequest) {
         Images image = imageMapper.toImages(imageRequest);
-        image.setCreatedAt(LocalDateTime.now());
-        image.setUpdatedAt(LocalDateTime.now());
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        image.setCreatedBy(user.getEmail());
-        image.setUpdatedBy(user.getEmail());
         ShoeVariants shoeVariants = shoeVariantRepository.findById(variant)
                 .orElseThrow(() -> new AppException(ErrorCode.SHOE_VARIANT_NOT_EXISTED));
         image.setVariant(shoeVariants);
-
         imageRepository.save(image);
         return imageMapper.toImageResponse(image);
     }
@@ -59,10 +51,6 @@ public class ImageServiceImpl implements ImageService {
     public ImageResponse update(Integer imageId, ImageRequest imageRequest) {
         Images images = imageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_EXISTED));
         imageMapper.updateShoe(images, imageRequest);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users users = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        images.setUpdatedAt(LocalDateTime.now());
-        images.setUpdatedBy(users.getEmail());
         ShoeVariants shoeVariants = shoeVariantRepository.findById(imageRequest.getVariant()).orElseThrow(() -> new AppException(ErrorCode.SHOE_VARIANT_NOT_EXISTED));
         images.setVariant(shoeVariants);
         imageRepository.save(images);

@@ -43,12 +43,6 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public PermissionResponse create(PermissionRequest permissionRequest) {
         Permissions permissions = permissionMapper.toPermission(permissionRequest);
-        permissions.setCreatedAt(LocalDateTime.now());
-        permissions.setUpdatedAt(LocalDateTime.now());
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        permissions.setCreatedBy(user.getEmail());
-        permissions.setUpdatedBy(user.getEmail());
         permissionRepository.save(permissions);
         return permissionMapper.toPermissionResponse(permissions);
     }
@@ -57,10 +51,6 @@ public class PermissionServiceImpl implements PermissionService {
     public PermissionResponse update(String permissionId, PermissionRequest permissionRequest) {
         Permissions permissions = permissionRepository.findById(permissionId).orElseThrow(()-> new AppException(ErrorCode.PERMISSION_NOT_EXISTED));
         permissionMapper.updatePermission(permissions,permissionRequest);
-        permissions.setUpdatedAt(LocalDateTime.now());
-        Users users = userRepository.findById(1).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        permissions.setUpdatedBy(users.getEmail());
-        permissions.setUpdatedAt(LocalDateTime.now());
         permissionRepository.save(permissions);
         return permissionMapper.toPermissionResponse(permissions);
     }

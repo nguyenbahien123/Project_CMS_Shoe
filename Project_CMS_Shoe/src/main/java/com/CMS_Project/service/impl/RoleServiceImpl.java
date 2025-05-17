@@ -47,14 +47,8 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleResponse create(RoleRequest roleRequest) {
         Roles role = roleMapper.toRole(roleRequest);
-        role.setCreatedAt(LocalDateTime.now());
-        role.setUpdatedAt(LocalDateTime.now());
         List<Permissions> permissions = permissionRepository.findAllById(roleRequest.getPermissions());
         role.setPermissions(new HashSet<>(permissions));
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        role.setCreatedBy(user.getEmail());
-        role.setUpdatedBy(user.getEmail());
         roleRepository.save(role);
         return roleMapper.toRoleResponse(role);
     }

@@ -43,8 +43,6 @@ public class UserServiceImpl implements UserService {
     public UserResponse createUser( UserCreationRequest request) {
         Users user = userMapper.toUser(request);
         user.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
         Roles role = roleRepository.findById(PredefinedRole.USER_ROLE).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
         user.setRoles(role);
         userRepository.save(user);
@@ -65,7 +63,6 @@ public class UserServiceImpl implements UserService {
         users.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
         Roles role = roleRepository.findById(request.getRoles()).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
         users.setRoles(role);
-        users.setUpdatedAt(LocalDateTime.now());
         userRepository.save(users);
         return userMapper.toUserResponse(users);
     }

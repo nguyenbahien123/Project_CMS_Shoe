@@ -48,10 +48,6 @@ public class OrderServiceImpl implements OrderService {
         String status = orderUpdateRequest.getStatus();
         OrderStatuses statuses = orderStatusRepository.findByStatusName(status).orElseThrow(()-> new AppException(ErrorCode.ORDER_STATUS_NOT_EXISTED));
         orders.setStatus(statuses);
-        orders.setUpdatedAt(LocalDateTime.now());
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
-        orders.setUpdatedBy(user.getEmail());
         orderRepository.save(orders);
         return orderMapper.toOrderResponse(orders);
     }

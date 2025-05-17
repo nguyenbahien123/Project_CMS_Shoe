@@ -44,12 +44,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     public CategoryResponse create(CategoryRequest categoryRequest) {
         Categories category = categoryMapper.toCategory(categoryRequest);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        category.setCreatedAt(LocalDateTime.now());
-        category.setUpdatedAt(LocalDateTime.now());
-        category.setCreatedBy(user.getEmail());
-        category.setUpdatedBy(user.getEmail());
         categoryRepository.save(category);
         return categoryMapper.toCategoryResponse(category);
     }
@@ -57,10 +51,6 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse update(Integer categoryId, CategoryRequest categoryRequest) {
         Categories category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
         categoryMapper.updateCategory(category, categoryRequest);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        category.setUpdatedAt(LocalDateTime.now());
-        category.setUpdatedBy(user.getEmail());
         categoryRepository.save(category);
         return categoryMapper.toCategoryResponse(category);
     }

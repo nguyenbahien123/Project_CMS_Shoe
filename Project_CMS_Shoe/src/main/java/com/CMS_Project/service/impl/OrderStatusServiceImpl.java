@@ -41,12 +41,6 @@ public class OrderStatusServiceImpl implements OrderStatusService {
     @Override
     public OrderStatusResponse create(OrderStatusRequest orderStatusRequest) {
         OrderStatuses orderStatuses = orderStatusMapper.toOrderStatus(orderStatusRequest);
-        orderStatuses.setCreatedAt(LocalDateTime.now());
-        orderStatuses.setUpdatedAt(LocalDateTime.now());
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        orderStatuses.setCreatedBy(user.getEmail());
-        orderStatuses.setUpdatedBy(user.getEmail());
         orderStatusRepository.save(orderStatuses);
         return orderStatusMapper.toOrderStatusResponse(orderStatuses);
     }
@@ -55,10 +49,6 @@ public class OrderStatusServiceImpl implements OrderStatusService {
     public OrderStatusResponse update(Integer statusId, OrderStatusRequest orderStatusRequest) {
         OrderStatuses orderStatuses = orderStatusRepository.findById(statusId).orElseThrow(() -> new AppException(ErrorCode.ORDER_STATUS_NOT_EXISTED));
         orderStatusMapper.updateOrderStatus(orderStatuses,orderStatusRequest);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        orderStatuses.setUpdatedBy(user.getEmail());
-        orderStatuses.setUpdatedAt(LocalDateTime.now());
         orderStatusRepository.save(orderStatuses);
         return orderStatusMapper.toOrderStatusResponse(orderStatuses);
     }

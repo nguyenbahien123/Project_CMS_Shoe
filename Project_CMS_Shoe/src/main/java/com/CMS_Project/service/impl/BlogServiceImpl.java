@@ -38,13 +38,9 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogResponse create(BlogRequest blogRequest) {
         Blogs blogs = blogMapper.toBlog(blogRequest);
-        blogs.setCreatedAt(LocalDateTime.now());
-        blogs.setUpdatedAt(LocalDateTime.now());
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         blogs.setUser(user);
-        blogs.setCreatedBy(user.getEmail());
-        blogs.setUpdatedBy(user.getEmail());
         blogs = blogRepository.save(blogs);
         return blogMapper.toBlogResponse(blogs);
     }
@@ -58,11 +54,6 @@ public class BlogServiceImpl implements BlogService {
     public BlogResponse update(int id,BlogRequest blogRequest) {
         Blogs blog = blogRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
         blogMapper.updateBlog(blog, blogRequest);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        blog.setUser(user);
-        blog.setUpdatedAt(LocalDateTime.now());
-        blog.setUpdatedBy(user.getEmail());
         blog = blogRepository.save(blog);
         return blogMapper.toBlogResponse(blog);
     }

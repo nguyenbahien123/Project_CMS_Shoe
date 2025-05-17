@@ -64,10 +64,6 @@ public class ShoeServiceImpl implements ShoeService {
     public ShoeResponse update(Integer shoeId, ShoeRequest shoeRequest) {
         Shoes shoes = shoeRepository.findById(shoeId).orElseThrow(() -> new AppException(ErrorCode.SHOE_NOT_EXISTED));
         shoeMapper.updateShoe(shoes, shoeRequest);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users users = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        shoes.setUpdatedBy(users.getEmail());
-        shoes.setUpdatedAt(LocalDateTime.now());
         Brands brands = brandsRepository.findByBrandName(shoeRequest.getBrands()).orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_EXISTED));
         Categories categories = categoryRepository.findByCategoryName(shoeRequest.getCategory()).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
         shoes.setBrands(brands);

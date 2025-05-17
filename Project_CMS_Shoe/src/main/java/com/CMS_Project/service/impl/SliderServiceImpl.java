@@ -42,12 +42,6 @@ public class SliderServiceImpl implements SliderService {
     @Override
     public SliderResponse create(SliderRequest sliderRequest) {
         Sliders sliders = sliderMapper.toSlider(sliderRequest);
-        sliders.setCreatedAt(LocalDateTime.now());
-        sliders.setUpdatedAt(LocalDateTime.now());
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        sliders.setCreatedBy(user.getEmail());
-        sliders.setUpdatedBy(user.getEmail());
         Shoes shoes = shoeRepository.findByName(sliderRequest.getShoe()).orElseThrow(() -> new AppException(ErrorCode.SHOE_NOT_EXISTED));
         sliders.setShoe(shoes);
         sliderRepository.save(sliders);

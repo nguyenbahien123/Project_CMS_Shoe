@@ -40,12 +40,6 @@ public class ColorServiceImpl implements ColorService {
 
     public ColorResponse create(ColorRequest colorRequest) {
         Colors colors = colorMapper.toColor(colorRequest);
-        colors.setCreatedAt(LocalDateTime.now());
-        colors.setUpdatedAt(LocalDateTime.now());
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        colors.setCreatedBy(user.getEmail());
-        colors.setUpdatedBy(user.getEmail());
         colorRepository.save(colors);
         return colorMapper.toColorResponse(colors);
     }
@@ -53,10 +47,6 @@ public class ColorServiceImpl implements ColorService {
     public ColorResponse update(Integer colorId, ColorRequest colorRequest) {
         Colors color = colorRepository.findById(colorId).orElseThrow(()-> new AppException(ErrorCode.COLOR_NOT_EXISTED));
         colorMapper.updateColor(color, colorRequest);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        color.setUpdatedAt(LocalDateTime.now());
-        color.setUpdatedBy(user.getEmail());
         colorRepository.save(color);
         return colorMapper.toColorResponse(color);
     }
