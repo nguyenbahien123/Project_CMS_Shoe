@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetails, Integer> {
     @Query(value = "SELECT u FROM OrderDetails u WHERE u.isActive = true AND (" +
-            "LOWER(u.images.url) LIKE :keyword OR " +
+            "LOWER(u.images.imagePath) LIKE :keyword OR " +
             "LOWER(u.order.receivedName) LIKE :keyword OR " +
             "LOWER(u.order.receivedAddress) LIKE :keyword OR " +
             "LOWER(u.createdBy) LIKE :keyword OR " +

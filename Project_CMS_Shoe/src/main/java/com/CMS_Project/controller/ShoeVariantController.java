@@ -7,6 +7,7 @@ import com.CMS_Project.dto.response.ApiResponse;
 import com.CMS_Project.dto.response.ShoeVariantPageResponse;
 import com.CMS_Project.dto.response.ShoeVariantResponse;
 import com.CMS_Project.service.ShoeVariantService;
+import com.CMS_Project.service.impl.ShoeVariantServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

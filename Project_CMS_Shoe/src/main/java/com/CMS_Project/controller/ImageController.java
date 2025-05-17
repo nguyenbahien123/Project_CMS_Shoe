@@ -7,13 +7,17 @@ import com.CMS_Project.dto.response.ApiResponse;
 import com.CMS_Project.dto.response.ImagePageResponse;
 import com.CMS_Project.dto.response.ImageResponse;
 import com.CMS_Project.service.ImageService;
+import com.CMS_Project.service.impl.ImageServiceImpl;
+import com.CMS_Project.service.UploadImageFile;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,20 +28,29 @@ import java.util.List;
 public class ImageController {
 
     ImageService imageService;
+    UploadImageFile uploadImageFile;
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
-    ApiResponse<ImageResponse> create(@RequestBody ImageRequest imageRequest){
+    ApiResponse<ImageResponse> create(@RequestParam("variant") int variant,
+                                      @RequestParam("file") MultipartFile file) throws IOException {
+        ImageRequest imageRequest = new ImageRequest();
+        imageRequest.setVariant(variant);
+        imageRequest.setImagePath(uploadImageFile.uploadImage(file));
         return ApiResponse.<ImageResponse>builder()
-                .result(imageService.create(imageRequest))
+                .result(imageService.create(variant, imageRequest))
                 .build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{imageId}")
-    ApiResponse<ImageResponse> update(@PathVariable Integer imageId, @RequestBody ImageRequest shoeVariantRequest){
+    ApiResponse<ImageResponse> update(@PathVariable Integer imageId, @RequestParam("variant") int variant,
+                                      @RequestParam("file") MultipartFile file) throws IOException {
+        ImageRequest imageRequest = new ImageRequest();
+        imageRequest.setVariant(variant);
+        imageRequest.setImagePath(uploadImageFile.uploadImage(file));
         return ApiResponse.<ImageResponse>builder()
-                .result(imageService.update(imageId,shoeVariantRequest))
+                .result(imageService.update(imageId,imageRequest))
                 .build();
     }
 

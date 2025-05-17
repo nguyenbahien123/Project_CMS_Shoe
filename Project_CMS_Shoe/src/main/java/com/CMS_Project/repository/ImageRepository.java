@@ -14,6 +14,6 @@ public interface ImageRepository extends JpaRepository<Images, Integer> {
             "LOWER(u.createdBy) LIKE :keyword OR " +
             "LOWER(u.updatedBy) LIKE :keyword OR " +
             "LOWER(u.variant.shoe.name) LIKE :keyword OR " +
-            "LOWER(u.url) LIKE :keyword)")
+            "LOWER(u.imagePath) LIKE :keyword)")
     Page<Images> searchByKeyword(String keyword, Pageable pageable);
 }

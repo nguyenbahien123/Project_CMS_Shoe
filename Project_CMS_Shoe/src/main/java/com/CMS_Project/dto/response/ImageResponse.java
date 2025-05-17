@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class ImageResponse {
     int imageId;
     ShoeVariantResponse variant;
-    String url;
+    String imagePath;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     String createdBy;

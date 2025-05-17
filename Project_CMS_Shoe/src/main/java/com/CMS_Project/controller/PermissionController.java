@@ -7,6 +7,7 @@ import com.CMS_Project.dto.response.ApiResponse;
 import com.CMS_Project.dto.response.PermissionPageResponse;
 import com.CMS_Project.dto.response.PermissionResponse;
 import com.CMS_Project.service.PermissionService;
+import com.CMS_Project.service.impl.PermissionServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import lombok.AccessLevel;

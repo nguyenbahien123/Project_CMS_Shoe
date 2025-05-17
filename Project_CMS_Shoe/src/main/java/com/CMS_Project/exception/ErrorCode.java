@@ -30,6 +30,7 @@ public enum ErrorCode {
     ORDER_NOT_EXISTED(1016, "Order not existed ", HttpStatus.NOT_FOUND),
     SLIDER_NOT_EXISTED(1017, "Slider not existed ", HttpStatus.NOT_FOUND),
     INVALID_TOKEN(1018, "Invalid token ", HttpStatus.BAD_REQUEST),
+    INVALID_FILE(1018, "Invalid file ", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

@@ -3,6 +3,7 @@ package com.CMS_Project.controller;
 
 import com.CMS_Project.dto.response.*;
 import com.CMS_Project.service.CommentService;
+import com.CMS_Project.service.impl.CommentServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

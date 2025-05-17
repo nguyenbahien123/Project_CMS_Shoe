@@ -21,6 +21,6 @@ public class Images extends AuditModel {
     @JoinColumn(name = "variant_id", nullable = false)
     private ShoeVariants variant;
 
-    @Column(nullable = false)
-    private String url;
+
+    private String imagePath;
 }

@@ -1,7 +1,7 @@
 package com.CMS_Project.configuration;
 
 import com.CMS_Project.dto.request.IntrospectRequest;
-import com.CMS_Project.service.AuthenticationService;
+import com.CMS_Project.service.impl.AuthenticationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -21,13 +21,13 @@ public class CustomJwtDecoder implements JwtDecoder {
     private String signerKey;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private AuthenticationServiceImpl authenticationServiceImpl;
 
     private NimbusJwtDecoder nimbusJwtDecoder = null;
 
     @Override
     public Jwt decode(String accessToken) throws JwtException {
-        var response = authenticationService.introspect(IntrospectRequest.builder().accessToken(accessToken).build());
+        var response = authenticationServiceImpl.introspect(IntrospectRequest.builder().accessToken(accessToken).build());
         if(!response.isValid()){
             throw new JwtException("invalid token");
         }
